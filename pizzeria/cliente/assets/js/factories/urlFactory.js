@@ -2,7 +2,7 @@ angular.module('miSitio')
 
 .factory('urlFactory', function () {
 	
-	var varServidor         = 'http://localhost/UTN/Github/TPlaboratorioIV2016-Torrellas/pizzeria/servidor/';
+	var varServidor         = 'http://localhost/UTN/Github/TPlaboratorioIV2016Torrellas/pizzeria/servidor/';
 	// var varServidor         = 'http://192.168.0.2/UTN/Github/Torrellas.SPLab42016/servidor/';
 	var varServices         = 'services/';
 

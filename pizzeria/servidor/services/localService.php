@@ -37,6 +37,86 @@ $crud = new Crud;
 
 switch ($objRecibido->accion) {
 	
+	case 'login':
+
+		$usuario = $crud->select("*", "usuarios", "email = '$objRecibido->email' && password = '$objRecibido->password' && estado = 1");
+
+		if ($usuario != false && $usuario != null) {
+			// Guarda el registro del login
+			// $crud->insert("registro_logins", "id_usuario, dispositivo_usuario", "'$usuario->id', '$objRecibido->dispositivo'");
+			// Trae la descripción del rol
+			$rolDescripcion = $crud->select("descripcion", "roles", "id = '$usuario->id_rol'");
+
+			// TOKEN
+			$key = 'miToken';
+			$token = array(
+				"id" => $usuario->id,
+				"nombre" => $usuario->nombre,
+				"email" => $usuario->email,
+				"password" => $usuario->password,
+				"rol" => $rolDescripcion->descripcion,
+				"foto" => $usuario->foto,
+				"exp" => time() + 900
+				// "iat" => 1356999524,
+				// "nbf" => 1357000000
+			);
+			$jwt = Firebase\JWT\JWT::encode($token, $key, 'HS256');
+
+			$array['miToken'] = $jwt;
+			echo json_encode($array);
+				
+		}
+		else {
+			echo "401";
+		}
+		break;
+
+	case 'recuperaPassword':
+		
+		$usuario = $crud->select( "*", "usuarios", "email = '$objRecibido->email' && estado = 1");
+
+		if ($usuario != null && $usuario != false) {					
+			// ENVIO MAIL
+			
+			// Varios destinatarios
+			$para  = $usuario->email; //. ', '; // atención a la coma
+			// $para .= 'wez@example.com';
+			
+			// título
+			$titulo = 'SISTEMA DE TORRELLAS: RECUPERACION PASSWORD';
+
+			// mensaje
+			$mensaje = '
+
+			*****************************
+			*   PIZZERIAS ARGENTA SRL   *
+			*****************************
+			
+			SERVICIO DE RECUPERACION DE PASSWORD  
+
+			**
+			*   Datos de usuario:
+			*
+			*	E-mail:    '.$usuario->email.'
+			*	Password:  '.$usuario->password.'
+			**
+			      
+			Gracias por utilizar el sistema.
+			Ante cualquier problema, duda o sugerencia no dudes en consultarnos.
+			e-mail: jp.torrellas@gmx.com
+			
+			';
+
+			mail($para, $titulo, $mensaje);
+
+			$respuesta['mensaje'] = 'ok';
+			echo json_encode($respuesta);
+		}
+		else {
+			$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);
+		}
+		break;
 
 	case 'alta':
 		
@@ -93,13 +173,20 @@ switch ($objRecibido->accion) {
 		}
 		break;
 
-	case 'cambioEstado':
+	case 'cambiaEstado':
     	
     	$usuario = $crud->select("*", "usuarios", "id = '$objRecibido->idUsuario'");
 
 		if ($usuario != false && $usuario != null) {
 
-	    	if ($crud->update("usuarios", "estado = '$objRecibido->estado'", "id = '$objRecibido->idUsuario'")) {
+			if ($usuario->estado == 1) {
+				$usuario->estado = 0;
+			}
+			else {
+				$usuario->estado = 1;
+			}
+
+	    	if ($crud->update("usuarios", "estado = '$usuario->estado'", "id = '$objRecibido->idUsuario'")) {
 	    		$respuesta['mensaje'] = 'ok';
 				echo json_encode($respuesta);
 	    	}
@@ -135,7 +222,7 @@ switch ($objRecibido->accion) {
 			// Si no actualizó la foto
 			if ($objRecibido->foto == '') {
 				// Actualiza solo datos
-				$crud->update("usuarios", "nombre = '$objRecibido->nombre', email = '$objRecibido->email', password = '$objRecibido->password1', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
+				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->telefono', password = '$objRecibido->password1', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
 
 				// Trae datos actualizados
 				$usuarioActualizado = $crud->select("*", "usuarios", "id = '$objRecibido->id'");
@@ -163,7 +250,8 @@ switch ($objRecibido->accion) {
 				file_put_contents($archivoImagen, $Base64Img);
 
 				// Actualiza datos y foto
-				$crud->update("usuarios", "nombre = '$objRecibido->nombre', email = '$objRecibido->email', password = '$objRecibido->password1', foto = '$nombreFoto', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
+				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->telefono', password = '$objRecibido->password1', foto = '$nombreFoto', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
+				
 
 				// Trae datos actualizados
 				$usuarioActualizado = $crud->select("*", "usuarios", "id = '$objRecibido->id'");
@@ -179,8 +267,15 @@ switch ($objRecibido->accion) {
 		break;	
 
 	case 'listado':
+		
+		// $tabla1 = 'usuarios';
+		// $tabla2 = 'roles';
+		// $campos = 'usuarios.id as id, usuarios.nombre as nombre, usuarios.email as email, usuarios.password as password, usuarios.foto as foto, roles.descripcion as rol';
+		// $condicion = "usuarios.id_rol = roles.id WHERE usuarios.estado = 1";
+
+		// $listaElementos = $crud->selectJoin("$campos", "$tabla1", "$tabla2", "$condicion");
 		 
-		$listaElementos = $crud->selectList("*", "locales", "estado = 1");
+		$listaElementos = $crud->selectList("usuarios.*, roles.descripcion as rol", "usuarios, roles", "usuarios.id_rol = roles.id");
     	
     	if ($listaElementos != null && $listaElementos != false) {
 

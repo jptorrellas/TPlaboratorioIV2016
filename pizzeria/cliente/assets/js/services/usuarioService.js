@@ -45,7 +45,7 @@ angular.module('miSitio')
     			}
     			else{
     				respuesta.estado = false;
-    				respuesta.mensaje = "Hubo un problema al intentar borrar usuario.";
+    				respuesta.mensaje = "Hubo un problema al intentar cambiar el estado.";
     				return respuesta;
     			}	
   			},

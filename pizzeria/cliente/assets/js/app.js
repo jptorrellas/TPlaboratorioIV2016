@@ -1,5 +1,5 @@
 
-var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngImgCrop', 'naif.base64']);
+var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngImgCrop', 'naif.base64']);
 
 
 app.run(function($http) {
@@ -18,7 +18,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 	
   	// Parametros de configuración
 	// $authProvider.loginUrl = "http://trexasolutions.com/galle/services/usuarioService.php";
-	$authProvider.loginUrl = "http://localhost/UTN/Github/TPlaboratorioIV2016-Torrellas/pizzeria/servidor/services/usuarioService.php";
+	$authProvider.loginUrl = "http://localhost/UTN/Github/TPlaboratorioIV2016Torrellas/pizzeria/servidor/services/usuarioService.php";
 	// $authProvider.loginUrl = "http://192.168.0.2/UTN/Github/Torrellas.SPLab42016/servidor/services/usuarioService.php";
 
 	//$authProvider.signupUrl = "http://api.com/auth/signup";
@@ -65,13 +65,13 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		.state('menu.adminGrillaProductos', {
+		.state('menu.adminGrillaLocales', {
 			cache: false,
-			url: '/grillaProductos',
+			url: '/grillaLocales',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaProductos.html',
-			    controller: 'GrillaProductosCtrl'
+			    templateUrl: 'templates/grillas/grillaLocales.html',
+			    controller: 'GrillaLocalesCtrl'
 			  }
 			}
 		})

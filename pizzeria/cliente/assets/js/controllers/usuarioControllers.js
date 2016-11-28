@@ -293,7 +293,7 @@ angular.module('miSitio')
   // fin ngImageCrop  
 })
 
-.controller('GrillaUsuariosCtrl', function($scope, $state, growl, i18nService, uiGridConstants, usuarioService, usuarioFactory, localService, urlFactory) {
+.controller('GrillaUsuariosCtrl', function($scope, $state, growl, i18nService, uiGridConstants, usuarioService, usuarioFactory, urlFactory) {
 
   $scope.usuario = usuarioFactory.payload;
   $scope.urlimg = urlFactory.imgPerfilUsuario;
@@ -338,7 +338,6 @@ angular.module('miSitio')
 
   $scope.editarItem = function(item) {
 
-    console.log(item);
 
     $scope.frmTitulo = 'Editar Usuario';
     $scope.btnModificarFoto = 'Modificar foto';   
@@ -512,13 +511,30 @@ angular.module('miSitio')
         { field: 'apellido', name: 'apellido',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.apellido}}</div>', width: 150 },
         { field: 'email', name: 'email',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.email}}</div>', width: 180 },
         { field: 'tel', name: 'teléfono', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.tel}}</div>', width: 180  },
-        { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.rol}}</div>', width: 180  },
+        { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.rol}}</div>', width: 180,
+          filter: { type: uiGridConstants.filter.SELECT,
+            selectOptions: [
+              {value: 'admin', label: 'administrador'},
+              {value: 'encargado', label: 'encargado'},
+              {value: 'empleado', label: 'empleado'},
+              {value: 'cliente', label: 'cliente'}
+            ] 
+          },
+          cellFilter: 'rol'
+        },
         { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
           cellTemplate: 
           '<div>\
             <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
           </div>', 
-          width: 100  
+          width: 140,
+          filter: { type: uiGridConstants.filter.SELECT,
+            selectOptions: [
+              {value: '1', label: 'activo'},
+              {value: '0', label: 'inactivo'}
+            ] 
+          },
+          cellFilter: 'estado'
         },
         { field: 'opciones', name: 'opciones', cellClass: 'ui-grid-vertical-center', 
           cellTemplate: 
@@ -540,9 +556,6 @@ angular.module('miSitio')
     else {
       $scope.gridOptions.columnDefs[posEstado].visible = false;
     }
-  
-  
-
 });
 
 

@@ -6,7 +6,7 @@ angular.module('miSitio')
 
 	this.alta = function(data) { 
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
   			function(retorno){ 
   				console.log(retorno);			   
@@ -16,7 +16,7 @@ angular.module('miSitio')
     			}
     			if (retorno.data.mensaje == "error") {
     				respuesta.estado = false;
-    				respuesta.mensaje = "Ya existe un usuario con ese email";
+    				respuesta.mensaje = "Ya existe un local con ese nombre";
     				return respuesta;
     			}
     			if (retorno.data.mensaje != "ok" && retorno.data != "error") {
@@ -33,19 +33,19 @@ angular.module('miSitio')
     	);
 	};
 
-	this.baja = function(data) {
+	this.cambiaEstado = function(data) {
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
   			function(retorno){         
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
-    				respuesta.mensaje = "Usuario Borrado!";
+    				respuesta.mensaje = "Cambio de estado ok!";
 	    			return respuesta;
     			}
     			else{
     				respuesta.estado = false;
-    				respuesta.mensaje = "Hubo un problema al intentar borrar usuario.";
+    				respuesta.mensaje = "Hubo un problema al intentar cambiar el estado.";
     				return respuesta;
     			}	
   			},
@@ -59,7 +59,7 @@ angular.module('miSitio')
 
 	this.modificacion = function(data) { 
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
   			function(retorno){ 
   				console.log(retorno);			   
@@ -70,7 +70,7 @@ angular.module('miSitio')
     			}
     			if (retorno.data.mensaje == "error. no existe el usuario") {
     				respuesta.estado = false;
-    				respuesta.mensaje = "El usuario que intenta editar ya no existe en el sistema. Por favor actualice la grilla.";
+    				respuesta.mensaje = "El local que intenta editar ya no existe en el sistema. Por favor actualice la grilla.";
     				return respuesta;
     			}
     			if (retorno.data.mensaje != "ok" && retorno.data != "error") {
@@ -89,10 +89,9 @@ angular.module('miSitio')
 
 	this.listado = function(data) {
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){   
-        console.log(retorno); 
+  			function(retorno){    
 				if (retorno.data.mensaje == "ok") {
 					respuesta.estado = true;
 	    			respuesta.mensaje = 'Lista actualizada';
@@ -121,29 +120,5 @@ angular.module('miSitio')
 			}
     	);
 	};
-
-	this.recuperaPassword = function(data) {
-
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
-    	.then(
-  			function(retorno){         
-    			if (retorno.data.mensaje != "error") {
-    				respuesta.estado = true;
-	    			respuesta.mensaje = 'Acabamos de enviarte el password. Revisa tu casilla de e-mail :)';
-	    			return respuesta;
-    			}
-    			else{
-    				respuesta.estado = false;
-    				respuesta.mensaje = "El email ingresado no pertenece a ningún usuario del sistema";
-    				return respuesta;
-    			}	
-  			},
-  			function(error){ 
-    			respuesta.estado = false;
-    			respuesta.mensaje = "Problema de conexión con el servidor.";
-    			return respuesta;
-  			}
-    	);
-	};	
 });
 
