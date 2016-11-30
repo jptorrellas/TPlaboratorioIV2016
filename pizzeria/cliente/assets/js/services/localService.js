@@ -6,10 +6,10 @@ angular.module('miSitio')
 
 	this.alta = function(data) { 
 
-    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
   			function(retorno){ 
-  				console.log(retorno);			   
+          console.log(retorno);			   
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
 	    			return respuesta;
@@ -35,7 +35,7 @@ angular.module('miSitio')
 
 	this.cambiaEstado = function(data) {
 
-    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
   			function(retorno){         
     			if (retorno.data.mensaje == "ok") {
@@ -59,7 +59,7 @@ angular.module('miSitio')
 
 	this.modificacion = function(data) { 
 
-    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
   			function(retorno){ 
   				console.log(retorno);			   
@@ -89,9 +89,10 @@ angular.module('miSitio')
 
 	this.listado = function(data) {
 
-    	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){    
+  			function(retorno) { 
+        // console.log(retorno);   
 				if (retorno.data.mensaje == "ok") {
 					respuesta.estado = true;
 	    			respuesta.mensaje = 'Lista actualizada';

@@ -52,6 +52,8 @@ switch ($objRecibido->accion) {
 			$token = array(
 				"id" => $usuario->id,
 				"nombre" => $usuario->nombre,
+				"apellido" => $usuario->apellido,
+				"tel" => $usuario->tel,
 				"email" => $usuario->email,
 				"password" => $usuario->password,
 				"rol" => $rolDescripcion->descripcion,
@@ -135,7 +137,7 @@ switch ($objRecibido->accion) {
 			// trae descricion de rol
 			$idRol = $crud->select("id", "roles", "descripcion = '$objRecibido->rol'");
 
-			if($crud->insert("usuarios", "nombre, apellido, email, tel, password, id_rol, fecha_alta", "'$objRecibido->nombre', '$objRecibido->apellido', '$objRecibido->email', '$objRecibido->telefono', '$objRecibido->password1', '$idRol->id', '$fechaActual'")) {
+			if($crud->insert("usuarios", "nombre, apellido, email, tel, password, id_rol, fecha_alta", "'$objRecibido->nombre', '$objRecibido->apellido', '$objRecibido->email', '$objRecibido->tel', '$objRecibido->password1', '$idRol->id', '$fechaActual'")) {
 
 				$usuarioCreado = $crud->select("id", "usuarios", "email = '$objRecibido->email'");
 
@@ -222,7 +224,7 @@ switch ($objRecibido->accion) {
 			// Si no actualizó la foto
 			if ($objRecibido->foto == '') {
 				// Actualiza solo datos
-				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->telefono', password = '$objRecibido->password1', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
+				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->tel', password = '$objRecibido->password1', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
 
 				// Trae datos actualizados
 				$usuarioActualizado = $crud->select("*", "usuarios", "id = '$objRecibido->id'");
@@ -250,7 +252,7 @@ switch ($objRecibido->accion) {
 				file_put_contents($archivoImagen, $Base64Img);
 
 				// Actualiza datos y foto
-				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->telefono', password = '$objRecibido->password1', foto = '$nombreFoto', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
+				$crud->update("usuarios", "nombre = '$objRecibido->nombre', apellido = '$objRecibido->apellido', email = '$objRecibido->email', tel = '$objRecibido->tel', password = '$objRecibido->password1', foto = '$nombreFoto', id_rol = '$idRol->id'", "id = '$objRecibido->id'");
 				
 
 				// Trae datos actualizados
@@ -275,7 +277,7 @@ switch ($objRecibido->accion) {
 
 		// $listaElementos = $crud->selectJoin("$campos", "$tabla1", "$tabla2", "$condicion");
 		 
-		$listaElementos = $crud->selectList("usuarios.*, roles.descripcion as rol", "usuarios, roles", "usuarios.id_rol = roles.id");
+		$listaElementos = $crud->selectList("usuarios.*, roles.descripcion as rol", "usuarios, roles", "usuarios.id_rol = roles.id AND usuarios.id != '$objRecibido->idUsuario'");
     	
     	if ($listaElementos != null && $listaElementos != false) {
 

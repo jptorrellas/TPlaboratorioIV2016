@@ -1,5 +1,5 @@
 
-var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngImgCrop', 'naif.base64']);
+var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngMap', 'ngImgCrop', 'naif.base64']);
 
 
 app.run(function($http) {
@@ -76,38 +76,48 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		//Comprador
-		.state('menu.compradorGrillaProductos', {
+		//ENCARGADO
+		.state('menu.encargadoGrillaUsuarios', {
 			cache: false,
-			url: '/grillaProductos',
+			url: '/grillaUsuarios',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaProductos.html',
-			    controller: 'GrillaProductosCtrl'
+			    templateUrl: 'templates/grillas/grillaUsuarios.html',
+			    controller: 'GrillaUsuariosCtrl'
 			  }
 			}
 		})
 
-		//Vendedor
-		.state('menu.vendedorGrillaProductos', {
+		.state('menu.encargadoGrillaLocales', {
 			cache: false,
-			url: '/grillaProductos',
+			url: '/grillaLocales',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaProductos.html',
-			    controller: 'GrillaProductosCtrl'
+			    templateUrl: 'templates/grillas/grillaLocales.html',
+			    controller: 'GrillaLocalesCtrl'
 			  }
 			}
 		})
 
-		//PRUEBA
-		.state('menu.simple', {
+		//EMPLEADO
+		.state('menu.empleadoGrillaUsuarios', {
 			cache: false,
-			url: '/simple',
+			url: '/grillaUsuarios',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/simple.html',
-			    controller: 'SimpleCtrl'
+			    templateUrl: 'templates/grillas/grillaUsuarios.html',
+			    controller: 'GrillaUsuariosCtrl'
+			  }
+			}
+		})
+
+		.state('menu.empleadoGrillaLocales', {
+			cache: false,
+			url: '/grillaLocales',
+			views: {
+			  'contenido': {
+			    templateUrl: 'templates/grillas/grillaLocales.html',
+			    controller: 'GrillaLocalesCtrl'
 			  }
 			}
 		})

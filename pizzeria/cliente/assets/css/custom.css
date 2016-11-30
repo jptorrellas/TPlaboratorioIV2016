@@ -77,3 +77,11 @@ form input.ng-invalid.ng-touched {
 }
 
 /* FIN UI GRID */
+.modal {
+  display: block;
+  z-index: -1;
+}
+
+.modal.fade.in {
+  z-index: 1050;
+}

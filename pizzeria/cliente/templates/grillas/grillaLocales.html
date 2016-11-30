@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
-    <link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
-</head>
-<body>
-	
-
-<div style="padding-top:50px; width:100%; background-image:url('assets/img/bg/bg-usuarios.jpg');" ng-controller="GrillaUsuariosCtrl">
+<div style="padding-top:50px; width:100%; background-image:url('assets/img/bg/bg-usuarios.jpg');" ng-controller="GrillaLocalesCtrl">
 	<div class="container" style="width:90%; margin-top:25px;">
+		<div class="row" style="text-align:right; margin:0px;">
+			<button class="btn btn-u" title="Volver" onclick="history.back()"><i class="fa fa-long-arrow-left"></i></button>
+		</div>
 		<div class="panel panel-u margin-bottom-40" style="overflow:auto;">
 		    <div class="panel-heading">
 		        <div class="row">
@@ -16,10 +10,10 @@
 		                <h3 style="margin:0; color:white;"><i class="fa fa-tasks"></i>{{grillaTitulo}}</h3>
 		            </div>
 		            <div class="col-md-1">
-		                <button class="btn btn-u" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
+		                <button class="btn btn-u" title="Agregar" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
 		            </div>
 		            <div class="col-md-1">
-		                <button class="btn btn-u" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
+		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
 		            </div>
 		        </div>     
 		    </div>
@@ -27,136 +21,101 @@
 		    <div ui-grid="gridOptions" class="myGrid" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter></div>
 
 		    <!-- Popup frm -->
-		    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;"> 
+		    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
 		        
 		        <div class="modal-dialog">
 		            <div class="modal-content">
 		                <div class="modal-header">
-		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="modificarFoto(false)">×</button>
+		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                    <h4 class="modal-title">{{frmTitulo}}</h4>
 		                </div>
 		                <div class="modal-body">
 		                    
-		                    <div class="reg-block" style="width:90%;">
+		                    <div class="reg-block" style="width:100%;">
 
 		                        <!-- form   -->
 		                        <form name="frm" novalidate>
 		                                
-		                            
-									<div class="input-group margin-bottom-20 center" style="width:100%;" ng-show="cargaFotoShow">
-		                                <img ng-src="{{fotoAGuardar}}" class="rounded-x" style="height:100px; width:100px; border: 1px solid #ccc;" />
-		                            </div>
-
 						            <div class="row">
 						                <div class="col col-md-6">
 						                    
 						                    <!-- nombre -->
 						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+						                        <span class="input-group-addon"><i class="fa fa-home"></i></span>
 						                        <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="frmData.nombre" required>
 						                    </div>
 						                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
 						                        <span ng-show="frm.nombre.$error.required">El campo es obligatorio.</span>
-						                    </div>
+						                    </div>   
 
-						                    <!-- email -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-						                        <input name="email" type="email" class="form-control" placeholder="Email" ng-model="frmData.email" required/>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.email.$touched">
-						                        <span ng-show="frm.email.$error.required">El campo es obligatorio.</span>
-						                        <span ng-show="frm.email.$error.email">Formato de email incorrecto.</span>
-						                    </div>
-
-						                    <!-- password1 -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-						                        <input name="password1" type="password" class="form-control" placeholder="Ingrese Password" ng-model="frmData.password1" required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
-						                        <span ng-show="frm.password1.$error.required">El campo es obligatorio.</span>
-						                    </div>
+						                    
 
 						                </div>
 						                <div class="col col-md-6">
-						                    
-						                    <!-- apellido -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-						                        <input name="apellido" type="text" class="form-control" placeholder="Apellido" ng-model="frmData.apellido" required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
-						                        <span ng-show="frm.apellido.$error.required">El campo es obligatorio.</span>
-						                    </div>
 
-						                    <!-- telefono -->
+						                	<!-- tel -->
 						                    <div class="input-group margin-bottom-20">
 						                        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-						                        <input name="telefono" type="number" max="9999999999" class="form-control" placeholder="Telefono" ng-model="frmData.telefono" required>
+						                        <input name="tel" type="number" max="9999999999" class="form-control" placeholder="Telefono" ng-model="frmData.tel" required>
 						                    </div>
 						                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
-						                        <span ng-show="frm.telefono.$error.required">El campo es obligatorio.</span>
+						                        <span ng-show="frm.tel.$error.required">El campo es obligatorio.</span>
 						                    </div>  
 
-						                    <!-- password2 -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-						                        <input name="password2" type="password" class="form-control" placeholder="Reingrese Password" ng-model="frmData.password2" required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.password2.$touched">
-						                        <span ng-show="frm.password2.$error.required">El campo es obligatorio.</span>
-						                        <span ng-show="frmData.password1 != frmData.password2">Los passwords no coinciden.</span>
-						                    </div>       
+						                    
 
 						                </div>
 						            </div>
-		                            
-		                    		
-		                            <label class="select" ng-if="usuario.rol == 'admin'">
-		                                <select ng-model="frmData.rol">
-		                                    <option value="admin">Administrador</option>
-		                                    <option value="encargado">Encargado</option>
-		                                    <option value="empleado">Empleado</option>
-		                                    <option value="cliente">Cliente</option>
-		                                </select>
-		                                <i style="top:10px; background:none;"></i>
-		                            </label>
-		                           
-		                           
-		                            <div class="row">
-		                                <div class="col-md-12">
-		                                    <button type="button" class="btn btn-default btn-block" ng-model="btnModificarFoto" ng-click="modificarFoto()">{{btnModificarFoto}}</button>
-		                                </div>
-		                            </div>
-		                            <div class="row" ng-show="cargaFotoShow" style="margin-top:15px;">
-		                                <div class="col-md-12">
-		                                    <label for="file" class="input input-file">
-		                                        <div class="button"><input type="file" name="file" onchange="this.parentNode.nextSibling.value = this.value" id="fileInput2">Buscar</div><input type="text" placeholder="Cargar una imagen" readonly="">
-		                                    </label>
-		                                </div>
 
-		                                <div class="col-md-12">
-		                                    <div class="row">
-		                                        <div class="col-md-12">
-		                                            <h6>Imagen elegida:</h6>
-		                                        </div>
-		                                    </div>
-		                                    <div class="row"  style="height:100px; width:100px;">
-		                                        <div class="col-md-12">
-		                                            <img-crop image="imagenElegida" area-type="square" result-image="fotoAGuardar" on-load-done="imagenAbierta = 1" result-image-size="150" area-min-size="150" height="150"></img-crop>
-		                                        </div>
-		                                    </div>                   
-		                                </div>     
-		                            </div>
+						            <div class="row">
+						            	<div class="col col-md-12">
+
+						            		<!-- direccion -->
+						                    <div class="input-group margin-bottom-20">
+						                        <span class="input-group-addon"><i class="fa fa-map"></i></span>
+						                        <input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="frmData.direccion" required/>
+						                    </div>
+						                    <div class="messages" ng-show="frm.$submitted || frm.email.$touched">
+						                        <span ng-show="frm.direccion.$error.required">El campo es obligatorio.</span>
+						                    </div>
+
+						            		<!-- latitud -->
+						                    <div class="input-group margin-bottom-20">
+						                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+						                        <input name="latitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.latitud" disabled required>
+						                    </div>
+						                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
+						                        <span ng-show="frm.latitud.$error.required">El campo es obligatorio.</span>
+						                    </div>
+
+						                    <!-- longitud -->
+						                    <div class="input-group margin-bottom-20">
+						                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+						                        <input name="longitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.longitud" disabled required>
+						                    </div>
+						                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
+						                        <span ng-show="frm.longitud.$error.required">El campo es obligatorio.</span>
+						                    </div>
+
+						                    <!-- mapa -->
+						                    <div>
+											    <ng-map zoom="11" center="{{frmData.direccion}}" style="width:100%; height:400px" on-click="getpos($event)" on-load="onLoad()">
+											      <marker position="{{frmData.direccion}}" title="{{frmData.direccion}}" on-dragend="getpos($event)" on-click="getpos($event)"></marker>
+											      <!-- <marker position="Brampton Canada" title="Brampton Canada"></marker> -->
+											    </ng-map>
+											</div>
+						            		
+						            	</div>
+						            </div>
+		                            
 		                        </form>
 		                        <!-- fin form editar usuario -->		                                       
 		                    </div>
 		                </div>
 		                <div class="modal-footer">
-		                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal" ng-click="modificarFoto(false)">Cerrar</button>
-		                    <button ng-if="frmTitulo == 'Editar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Modificar</button>
-		                    <button ng-if="frmTitulo == 'Agregar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Agregar</button>
+		                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
+		                    <button ng-if="frmTitulo == 'Editar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid" data-dismiss="modal">Modificar</button>
+		                    <button ng-if="frmTitulo == 'Agregar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid" data-dismiss="modal">Agregar</button>
 		                </div>
 		            </div>
 		        </div>
@@ -164,6 +123,33 @@
 		</div>
 	</div>
 </div>
-</body>
-</html>
+
+
+<!-- <div style="height:400px; width:600px;">
+	<div ng-if="map">
+		<ng-map zoom="11" center="[{{Lat}}, {{Log}}]" style="width:100%">
+			<marker icon="{{customIcon}}" position ="[{{Lat}}, {{Log}}]" title="{{Nombre}}" animation="Animation.DROP" ></marker>
+		</ng-map>
+	</div>
+</div>
+
+
+<div>
+	<ng-map center="-34.59746543232893,-58.453102111816406" zoom="11" on-click="getpos($event)">
+	  <marker position="{{latlng}}" title="Hello World!" on-dragend="getpos($event)" 
+	    animation="Animation.BOUNCE" animation="DROP" draggable="true"></marker>
+	</ng-map>
+</div>
+{{latlng}}
+
+<hr>
+{{direccion}}
+{{latlng}}
+<div>
+    <ng-map zoom="11" center="{{direccion}}" style="width:600px; height:400px" on-click="getpos($event)">
+      <marker position="{{direccion}}" title="{{direccion}}" on-dragend="getpos($event)" on-click="getpos($event)"></marker> -->
+      <!-- <marker position="Brampton Canada" title="Brampton Canada"></marker> -->
+    <!-- </ng-map>
+    <br/>Address : <input ng-model="direccion" />
+  </div> -->
 

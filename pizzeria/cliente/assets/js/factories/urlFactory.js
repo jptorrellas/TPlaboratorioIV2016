@@ -6,6 +6,7 @@ angular.module('miSitio')
 	// var varServidor         = 'http://192.168.0.2/UTN/Github/Torrellas.SPLab42016/servidor/';
 	var varServices         = 'services/';
 
+	var varIconoArgenta		= 'img/locales/icono-argenta.png'
 	var varImgPerfilUsuario = 'img/usuarios/';
 	var varImgProducto      = 'img/productos/';
 
@@ -16,6 +17,7 @@ angular.module('miSitio')
 	return {
  		servidor		 : varServidor,
  		services         : varServidor + varServices,
+ 		iconoArgenta	 : varServidor + varIconoArgenta,
  		imgPerfilUsuario : varServidor + varImgPerfilUsuario,
  		imgProducto      : varServidor + varImgProducto,
  		wsUsuario        : varServidor + varServices + varWsUsuario,

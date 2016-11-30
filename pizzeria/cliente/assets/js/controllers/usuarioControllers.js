@@ -32,7 +32,7 @@ angular.module('miSitio')
       nombre: $rootScope.usuarioActual.nombre,
       apellido: $rootScope.usuarioActual.apellido,
       email: $rootScope.usuarioActual.email,
-      telefono: $rootScope.usuarioActual.tel,
+      tel: $rootScope.usuarioActual.tel,
       password1: $rootScope.usuarioActual.password,
       password2: $rootScope.usuarioActual.password,
       rol: $rootScope.usuarioActual.rol,
@@ -156,13 +156,13 @@ angular.module('miSitio')
             $state.go('menu.adminGrillaUsuarios');
           }
           if (usuarioFactory.payload.rol == "encargado") {
-            $state.go('menu.encargadoGrillaProductos');
+            $state.go('menu.encargadoGrillaUsuarios');
           }
           if (usuarioFactory.payload.rol == "empleado") {
-            $state.go('menu.empleadoGrillaProductos');
+            $state.go('menu.empleadoGrillaUsuarios');
           }
           if (usuarioFactory.payload.rol == "cliente") {
-            $state.go('menu.clienteGrillaProductos');
+            $state.go('menu.clienteGrillaUsuarios');
           }
         }
         else {
@@ -223,7 +223,7 @@ angular.module('miSitio')
     nombre: 'ClienteNombre',
     apellido: 'ClienteApellido',
     email: 'clenteprueba@argenta.com',
-    telefono: 1566666666,
+    tel: 1566666666,
     password1: '123',
     password2: '123',
     rol: 'cliente',
@@ -300,7 +300,7 @@ angular.module('miSitio')
   $scope.grillaTitulo = 'Lista de Usuarios';
 
   $scope.traerTodo = function() {
-    $scope.traerTodoData = { usuarioId: $scope.id, accion: 'listado' };
+    $scope.traerTodoData = { idUsuario: $scope.usuario.id, accion: 'listado' };
     
     usuarioService.listado($scope.traerTodoData)
     .then( 
@@ -348,7 +348,7 @@ angular.module('miSitio')
       nombre: item.nombre,
       apellido: item.apellido,
       email: item.email,
-      telefono: item.tel,
+      tel: item.tel,
       password1: item.password,
       password2: item.password,
       rol: item.rol,
@@ -393,7 +393,7 @@ angular.module('miSitio')
       nombre: 'Pruebanombre',
       apellido: 'PruebaApellido',
       email: 'prueba@argenta.com',
-      telefono: 1566688899,
+      tel: 1566688899,
       password1: '123',
       password2: '123',
       rol: 'cliente',
@@ -539,7 +539,7 @@ angular.module('miSitio')
         { field: 'opciones', name: 'opciones', cellClass: 'ui-grid-vertical-center', 
           cellTemplate: 
           '<div>\
-            <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#popupfrm" ng-click="grid.appScope.editarItem(row.entity);" ><i class="fa fa-pencil"></i> Editar</button>\
+            <button class="btn btn-warning btn-xs rounded-x" style="height:25px; width:25px;" title="Editar" data-toggle="modal" data-target="#popupfrm" ng-click="grid.appScope.editarItem(row.entity);" ><i class="fa fa-pencil"></i></button>\
           </div>'
           ,
           headerCellClass: 'center', enableFiltering: false, enableColumnMenu: false

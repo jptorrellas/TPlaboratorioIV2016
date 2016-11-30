@@ -120,7 +120,7 @@ class Crud extends DBConnection
 	* @param string $condiciones
 	* @return object | null | false
 	*/
-	public function selectList($campos, $tabla, $condiciones)
+	public function selectList($campos, $tabla, $condiciones=null)
 	{
 		// Protege de SQL injection
 		if ($this->protectQuery([$campos, $tabla, $condiciones])) {
