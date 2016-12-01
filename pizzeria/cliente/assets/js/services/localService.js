@@ -92,7 +92,7 @@ angular.module('miSitio')
     	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
-        // console.log(retorno);   
+        //console.log(retorno);   
 				if (retorno.data.mensaje == "ok") {
 					respuesta.estado = true;
 	    			respuesta.mensaje = 'Lista actualizada';

@@ -41,12 +41,12 @@
     <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
         <div class="container" style="width: 90%">         
 
-            <ul ng-if="usuarioActual.rol == 'admin'" class="nav navbar-nav">               
+            <ul ng-if="usuarioActual.rol != 'cliente'" class="nav navbar-nav">               
                 <li class="page-scroll">
                     <a ng-href="#/menu/grillaUsuarios">USUARIOS</a>
                 </li>
             </ul>
-            <ul class="nav navbar-nav">
+            <ul ng-if="usuarioActual.rol != 'cliente'" class="nav navbar-nav">
                 <li class="page-scroll">
                     <a ng-href="#/menu/grillaLocales">LOCALES</a>
                 </li>
@@ -160,23 +160,7 @@
 
                             </div>
                         </div>
-                                    
-                                    
-                        <div class="row">
-                            <div class="col col-md-12">
-                                <label class="select" ng-if="usuarioActual.rol == 'admin'">
-                                    <select style="width: 249px; height:28px;" ng-model="editarPerfilData.rol">
-                                        <option value="admin">Administrador</option>
-                                        <option value="encargado">Encargado</option>
-                                        <option value="empleado">Empleado</option>
-                                        <option value="cliente">Cliente</option>
-                                    </select>
-                                    <i style="top:10px; background:none;"></i>
-                                </label>
-                            </div>
-                        </div>
-
-                        
+                      
 
                         <div class="row">
                             <div class="col-md-12">

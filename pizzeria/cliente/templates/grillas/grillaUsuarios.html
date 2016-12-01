@@ -106,22 +106,56 @@
 						                </div>
 						            </div>
 		                            
+		                            <!-- si es alta de usuario -->
 		                    		<div class="row">
-		                    			<div class="col col-md-12">
-			                    			<label class="select" ng-if="usuarioActual.rol == 'admin'">
-				                                <select style="width: 249px; height:28px;" ng-model="frmData.rol">
-				                                    <option value="admin">Administrador</option>
-				                                    <option value="encargado">Encargado</option>
-				                                    <option value="empleado">Empleado</option>
+		                    			<div class="col col-md-6" ng-if="frmTitulo == 'Agregar Usuario'">
+			                    			<label class="select">
+				                                <select style="width: 249px; height:28px;" ng-model="frmData.rol" ng-change="traerCboLocales()">
+				                                	<option ng-if="usuarioActual.rol == 'admin'" value="admin">Administrador</option>
+				                                    <option ng-if="usuarioActual.rol == 'admin'" value="encargado">Encargado</option>
+				                                    <option ng-if="usuarioActual.rol == 'admin'" value="empleado">Empleado</option>
 				                                    <option value="cliente">Cliente</option>
 				                                </select>
 				                                <i style="top:10px; background:none;"></i>
 				                            </label>
 				                        </div>
+				                        <div class="col col-md-6" ng-if="frmTitulo == 'Agregar Usuario'">
+			                    			<label class="select" ng-if="usuarioActual.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
+				                                <select style="width: 249px; height:28px;" name="local" ng-model="frmData.local" required>
+				                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
+				                   				</select>
+				                                <i style="top:10px; background:none;"></i>
+				                            </label>
+				                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.local.$touched">
+						                    	<span ng-show="frm.local.$error.required">El campo es obligatorio.</span>
+						                	</div>
+				                        </div>
+
+				                        <!-- si es edicion de usuario -->
+				                        <div class="col col-md-6" ng-if="frmTitulo == 'Editar Usuario'">
+			                    			<label class="select" ng-if="(rolUsuarioAeditar != 'cliente' && rolUsuarioAeditar != 'admin') && (usuarioActual.rol == 'admin')">
+				                                <select style="width: 249px; height:28px;" ng-model="frmData.rol" ng-change="traerCboLocales()">
+				                                    <option ng-if="usuarioActual.rol == 'admin' && rolUsuarioAeditar == 'encargado'" value="encargado">Encargado</option>
+				                                    <option ng-if="usuarioActual.rol == 'admin' && rolUsuarioAeditar == 'empleado'" value="empleado">Empleado</option>
+				                                </select>
+				                                <i style="top:10px; background:none;"></i>
+				                            </label>
+				                        </div>
+				                        <div class="col col-md-6"  ng-if="frmTitulo == 'Editar Usuario'">
+			                    			<label class="select" ng-if="usuarioActual.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
+				                                <select style="width: 249px; height:28px;" name="local" ng-model="frmData.local" required>
+				                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
+				                   				</select>
+				                                <i style="top:10px; background:none;"></i>
+				                            </label>
+				                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.local.$touched">
+						                    	<span ng-show="frm.local.$error.required">El campo es obligatorio.</span>
+						                	</div>
+				                        </div>
+				                        
 		                    		</div>
 		                            
-		                           
-		                           
+		                           	                           
 		                            <div class="row">
 		                                <div class="col-md-12">
 		                                    <button type="button" class="btn btn-default btn-block" ng-model="btnModificarFoto" ng-click="modificarFoto()">{{btnModificarFoto}}</button>
@@ -153,8 +187,8 @@
 		                </div>
 		                <div class="modal-footer">
 		                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal" ng-click="modificarFoto(false)">Cerrar</button>
-		                    <button ng-if="frmTitulo == 'Editar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Modificar</button>
-		                    <button ng-if="frmTitulo == 'Agregar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Agregar</button>
+		                    <button ng-if="frmTitulo == 'Editar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2 || frmData.local == ''" data-dismiss="modal">Modificar</button>
+		                    <button ng-if="frmTitulo == 'Agregar Usuario'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2 || frmData.local == ''" data-dismiss="modal">Agregar</button>
 		                </div>
 		            </div>
 		        </div>

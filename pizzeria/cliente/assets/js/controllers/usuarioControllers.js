@@ -138,6 +138,7 @@ angular.module('miSitio')
     $auth.login($scope.loginData, { timeout: 10000 })
     .then(
       function(respuesta) {
+        //console.log(respuesta);
         if ($auth.isAuthenticated()) {
           
           // Guarda datos de usuario en usuarioFactory.payload
@@ -293,14 +294,98 @@ angular.module('miSitio')
   // fin ngImageCrop  
 })
 
-.controller('GrillaUsuariosCtrl', function($scope, $state, growl, i18nService, uiGridConstants, usuarioService, usuarioFactory, urlFactory) {
+.controller('GrillaUsuariosCtrl', function($scope, $state, growl, i18nService, uiGridConstants, usuarioService, localService, usuarioFactory, urlFactory) {
 
   $scope.usuario = usuarioFactory.payload;
   $scope.urlimg = urlFactory.imgPerfilUsuario;
   $scope.grillaTitulo = 'Lista de Usuarios';
 
+  $scope.listaLocales = [];
+
+  
+  $scope.traerCboLocales = function() {
+
+    if ($scope.frmData.rol == "empleado") {
+      
+      $scope.traerCboLocalesTodos = function() {
+
+        $scope.traerCboLocalesData = { idUsuario: $scope.usuario.id, rolUsuario: $scope.usuario.rol, filtro: 'cboEmpleado', accion: 'listado' };
+        
+        localService.listado($scope.traerCboLocalesData)
+        .then( 
+          function(respuesta) { 
+            if (respuesta.estado == true) {
+              $scope.listaLocales = respuesta.datos;
+              if ($scope.frmTitulo == 'Editar Usuario' && $scope.rolUsuarioAeditar == 'empleado') { 
+                $scope.frmData.local = $scope.localUsuarioAeditar;
+              }
+              if ($scope.frmTitulo == 'Agregar Usuario') { 
+                $scope.frmData.local = $scope.listaLocales[0].nombre;
+              }
+            }
+            else {
+              growl.error(respuesta.mensaje, {ttl: 3000}); 
+            }
+          }
+        );
+      };
+      $scope.traerCboLocalesTodos();
+    }
+
+    if ($scope.frmData.rol == "encargado") {
+
+      $scope.traerCboLocalesSinEncargado = function() {
+
+        $scope.traerCboLocalesData = { idUsuario: $scope.usuario.id, rolUsuario: $scope.usuario.rol, filtro: 'cboEncargado', accion: 'listado' };
+        
+        localService.listado($scope.traerCboLocalesData)
+        .then( 
+          function(respuesta) { 
+            if (respuesta.estado == true) {
+              $scope.listaLocales = respuesta.datos;
+              if ($scope.frmTitulo == 'Editar Usuario' && $scope.rolUsuarioAeditar == 'encargado') {
+                $scope.listaLocales.push({nombre : $scope.localUsuarioAeditar});                
+                $scope.frmData.local = $scope.localUsuarioAeditar;
+              }
+              if ($scope.frmTitulo == 'Editar Usuario' && $scope.rolUsuarioAeditar == 'empleado') {                
+                $scope.frmData.local = '';
+                $scope.frmData.local = $scope.listaLocales[0].nombre;
+              }
+              if ($scope.frmTitulo == 'Agregar Usuario') { 
+                $scope.frmData.local = $scope.listaLocales[0].nombre;
+              }
+            }
+            else {
+              growl.error("Todos los Locales tienen encargados", {ttl: 3000});
+              $scope.listaLocales = [];
+              if ($scope.frmTitulo == 'Editar Usuario' && $scope.rolUsuarioAeditar == 'encargado') {
+                $scope.listaLocales.push({nombre : $scope.localUsuarioAeditar});
+                $scope.frmData.local = $scope.listaLocales[0].nombre;
+              }
+              if ($scope.frmTitulo == 'Editar Usuario' && $scope.rolUsuarioAeditar == 'empleado') {                
+                $scope.frmData.local = '';
+              }
+              if ($scope.frmTitulo == 'Agregar Usuario') { 
+                $scope.frmData.local = '';
+              }
+            }
+          }
+        );
+      };
+      $scope.traerCboLocalesSinEncargado();
+    }
+
+    if ($scope.frmData.rol == "admin") {
+      $scope.frmData.local = "Sin Local";
+    }
+
+    if ($scope.frmData.rol == "cliente") {
+      $scope.frmData.local = "Sin Local";
+    }
+  };
+
   $scope.traerTodo = function() {
-    $scope.traerTodoData = { idUsuario: $scope.usuario.id, accion: 'listado' };
+    $scope.traerTodoData = { idUsuario: $scope.usuario.id, rolUsuario: $scope.usuario.rol, accion: 'listado' };
     
     usuarioService.listado($scope.traerTodoData)
     .then( 
@@ -319,7 +404,7 @@ angular.module('miSitio')
   
   $scope.cambiaEstadoItem = function(idItem) {
 
-    $scope.cambiaEstadoData = { idUsuario : idItem, accion : 'cambiaEstado' };
+    $scope.cambiaEstadoData = { idUsuario: idItem, accion : 'cambiaEstado' };
 
     usuarioService.cambiaEstado($scope.cambiaEstadoData)
     .then( 
@@ -340,7 +425,9 @@ angular.module('miSitio')
 
 
     $scope.frmTitulo = 'Editar Usuario';
-    $scope.btnModificarFoto = 'Modificar foto';   
+    $scope.btnModificarFoto = 'Modificar foto';
+    $scope.localUsuarioAeditar = item.local;
+    $scope.rolUsuarioAeditar = item.rol; 
     
     $scope.frmData =
     {
@@ -352,9 +439,11 @@ angular.module('miSitio')
       password1: item.password,
       password2: item.password,
       rol: item.rol,
+      local: item.local,
       foto: urlFactory.imgPerfilUsuario +  item.foto,
       accion: 'modificacion'
     };
+    $scope.traerCboLocales();
 
     $scope.fotoAGuardar = $scope.frmData.foto;   
 
@@ -397,6 +486,7 @@ angular.module('miSitio')
       password1: '123',
       password2: '123',
       rol: 'cliente',
+      local: $scope.listaLocales[0],
       foto: urlFactory.imgPerfilUsuario + 'defaultPerfil.jpeg',
       accion: 'alta'
     };
@@ -511,7 +601,7 @@ angular.module('miSitio')
         { field: 'apellido', name: 'apellido',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.apellido}}</div>', width: 150 },
         { field: 'email', name: 'email',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.email}}</div>', width: 180 },
         { field: 'tel', name: 'teléfono', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.tel}}</div>', width: 180  },
-        { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.rol}}</div>', width: 180,
+        { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.rol}}</div>', width: 160,
           filter: { type: uiGridConstants.filter.SELECT,
             selectOptions: [
               {value: 'admin', label: 'administrador'},
@@ -522,12 +612,13 @@ angular.module('miSitio')
           },
           cellFilter: 'rol'
         },
+        { field: 'local', name: 'local', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.local}}</div>', width: 180  },
         { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
           cellTemplate: 
           '<div>\
             <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
           </div>', 
-          width: 140,
+          width: 110,
           filter: { type: uiGridConstants.filter.SELECT,
             selectOptions: [
               {value: '1', label: 'activo'},

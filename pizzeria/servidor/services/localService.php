@@ -49,7 +49,12 @@ switch ($objRecibido->accion) {
 		else {
 			
 			// inserta el nuevo local
-			if($crud->insert("locales", "nombre, direccion, tel, latitud, longitud", "'$objRecibido->nombre', '$objRecibido->direccion', '$objRecibido->tel', '$objRecibido->latitud', '$objRecibido->longitud'")) {
+			if($crud->insert("locales", "nombre, direccion, tel, latitud, longitud, estado", "'$objRecibido->nombre', '$objRecibido->direccion', '$objRecibido->tel', '$objRecibido->latitud', '$objRecibido->longitud', 0")) {
+
+				$local = $crud->select("*", "locales", "nombre = '$objRecibido->nombre'");
+				
+				// Inserta un registro de encargado vacío para ese local y lo pone en estado 0
+				$crud->insert("locales_plantilla", "id_local, id_usuario, id_rol, estado", "'$local->id', null, 2, 0");
 
 				$respuesta['mensaje'] = 'ok';
 				echo json_encode($respuesta);
@@ -112,23 +117,39 @@ switch ($objRecibido->accion) {
 		break;	
 
 	case 'listado':
-		 
-		 if ($objRecibido->usuarioRol == 'admin') {
-		 	$campos = '*';
-		 	$tablas = 'locales';
-		 	$condiciones = '1';
-		 }
-		 if ($objRecibido->usuarioRol == 'encargado') {
-		 	$campos = 'locales.*, locales_encargados.id_local AS locEncIdLoc';
-		 	$tablas = 'locales, locales_encargados';
-		 	$condiciones = 'locales.id = locales_encargados.id_local AND '.$objRecibido->usuarioId.' = locales_encargados.id_usuario AND locales_encargados.estado = 1';
-		 }
-		 if ($objRecibido->usuarioRol == 'empleado') {
-		 	$campos = 'locales.*';
-		 	$tablas = 'locales, locales_encargados';
-		 	$condiciones = 'locales.id = locales_empleados.id_local AND $objRecibido->usuarioId = locales_empleados.id_usuario AND locales_empleados.estado = 1';
-		 }
 		
+		// Para la grilla de locales
+		if ($objRecibido->filtro == "grilla") {
+		 
+			if ($objRecibido->rolUsuario == 'admin') {
+				$campos = '*';
+				$tablas = 'locales';
+				$condiciones = '1';
+			}
+			if ($objRecibido->rolUsuario == 'encargado' || $objRecibido->rolUsuario == 'empleado') {
+				$campos = 'locales.*';
+				$tablas = 'locales, locales_plantilla';
+				$condiciones = 'locales.id = locales_plantilla.id_local AND '.$objRecibido->idUsuario.' = locales_plantilla.id_usuario AND locales_plantilla.estado = 1';
+			}
+		}
+
+		// Para el cbo locales en alta/modificacion empleado
+		if ($objRecibido->filtro == "cboEmpleado") {
+			
+			$campos = '*';
+			$tablas = 'locales';
+			$condiciones = '1';
+		}
+
+		// Para el cbo locales en alta/modificacion encargado
+		if ($objRecibido->filtro == "cboEncargado") {
+			
+			$campos = 'locales.*';
+			$tablas = 'locales, locales_plantilla';
+			$condiciones = 'locales.id = locales_plantilla.id_local AND locales_plantilla.id_rol = 2 AND locales_plantilla.estado = 0';
+		}
+
+
 
 		$listaElementos = $crud->selectList("$campos", "$tablas", "$condiciones");
     	

@@ -21,7 +21,7 @@ class Crud extends DBConnection
 	/**
 	* Atributos
 	*/
-	private $arrayDeProteccion = ['select', 'insert', 'update', 'delete', 'drop', 'alter', 'altertable', 'create', 'grant', 'revoke', 'table', 'view', 'index'];
+	private $arrayDeProteccion = ['insert', 'update', 'delete', 'drop', 'alter', 'altertable', 'create', 'grant', 'revoke', 'table', 'view', 'index'];
 
 	function __construct(){}
 

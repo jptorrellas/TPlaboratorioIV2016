@@ -6,7 +6,7 @@ angular.module('miSitio')
   $scope.grillaTitulo = 'Lista de Locales';
 
   $scope.traerTodo = function() {
-    $scope.traerTodoData = { usuarioId: $scope.usuario.id, usuarioRol: $scope.usuario.rol, accion: 'listado' };
+    $scope.traerTodoData = { idUsuario: $scope.usuario.id, rolUsuario: $scope.usuario.rol, filtro: 'grilla', accion: 'listado' };
     
     localService.listado($scope.traerTodoData)
     .then( 
