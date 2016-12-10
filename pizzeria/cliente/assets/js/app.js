@@ -76,6 +76,17 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
+		.state('menu.adminGrillaLocalesFotos', {
+			cache: false,
+			url: '/grillaLocalesFotos',
+			views: {
+			  'contenido': {
+			    templateUrl: 'templates/grillas/grillaLocalesFotos.html',
+			    controller: 'GrillaLocalesFotosCtrl'
+			  }
+			}
+		})
+
 		//ENCARGADO
 		.state('menu.encargadoGrillaUsuarios', {
 			cache: false,

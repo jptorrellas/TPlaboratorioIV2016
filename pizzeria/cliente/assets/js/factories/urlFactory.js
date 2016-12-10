@@ -8,6 +8,7 @@ angular.module('miSitio')
 
 	var varIconoArgenta		= 'img/locales/icono-argenta.png'
 	var varImgPerfilUsuario = 'img/usuarios/';
+	var varImgLocal      	= 'img/locales/';
 	var varImgProducto      = 'img/productos/';
 
 	var varWsUsuario        =  'usuarioService.php';
@@ -19,6 +20,7 @@ angular.module('miSitio')
  		services         : varServidor + varServices,
  		iconoArgenta	 : varServidor + varIconoArgenta,
  		imgPerfilUsuario : varServidor + varImgPerfilUsuario,
+ 		imgLocal 		 : varServidor + varImgLocal,
  		imgProducto      : varServidor + varImgProducto,
  		wsUsuario        : varServidor + varServices + varWsUsuario,
  		wsProducto       : varServidor + varServices + varWsProducto,

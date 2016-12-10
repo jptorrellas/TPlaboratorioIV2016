@@ -578,6 +578,7 @@ angular.module('miSitio')
       }
     };
     $scope.gridOptions.enableGridMenu = true;
+    $scope.gridOptions.gridMenuShowHideColumns = false;
     $scope.gridOptions.selectAll = true;
 
     // Configuracion de la paginacion
@@ -616,7 +617,7 @@ angular.module('miSitio')
         { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
           cellTemplate: 
           '<div>\
-            <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
+            <input type="checkbox" ng-if="grid.appScope.usuario.rol == \'admin\' || (grid.appScope.usuario.rol == \'encargado\'  && row.entity.rol == \'empleado\' ) " ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
           </div>', 
           width: 110,
           filter: { type: uiGridConstants.filter.SELECT,
@@ -640,12 +641,25 @@ angular.module('miSitio')
 
     // Oculta columnas según rol usuario
     var posEstado = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('estado');
+    var posLocal= $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('local');
     
     if ($scope.usuario.rol == 'admin') {
       $scope.gridOptions.columnDefs[posEstado].visible = true;
+      return;
+    }
+    // else {
+    //   $scope.gridOptions.columnDefs[posEstado].visible = false;
+    // }
+    if ($scope.usuario.rol == 'encargado' ) {
+      $scope.gridOptions.columnDefs[posEstado].visible = true;
+      return;
     }
     else {
       $scope.gridOptions.columnDefs[posEstado].visible = false;
+    }
+    if ($scope.usuario.rol == 'empleado' ) {
+      $scope.gridOptions.columnDefs[posLocal].visible = false;
+      return;
     }
 });
 

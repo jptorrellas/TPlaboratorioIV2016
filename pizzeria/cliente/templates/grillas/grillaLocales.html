@@ -3,7 +3,9 @@
 		<div class="row" style="text-align:right; margin:0px;">
 			<button class="btn btn-u" title="Volver" onclick="history.back()"><i class="fa fa-long-arrow-left"></i></button>
 		</div>
-		<div class="panel panel-u margin-bottom-40" style="overflow:auto;">
+		
+		<!-- GRILLA LOCAES -->
+		<div class="panel panel-u margin-bottom-40">
 		    <div class="panel-heading">
 		        <div class="row">
 		            <div class="col-md-10">
@@ -18,109 +20,134 @@
 		        </div>     
 		    </div>
 		    <!-- UI-GRID -->
-		    <div ui-grid="gridOptions" class="myGrid" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter></div>
+		    <div ui-grid="gridOptions" class="myGrid" style="height:300px !important;" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter></div>	    
+		</div>
 
-		    <!-- Popup frm -->
-		    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
-		        
-		        <div class="modal-dialog">
-		            <div class="modal-content">
-		                <div class="modal-header">
-		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		                    <h4 class="modal-title">{{frmTitulo}}</h4>
-		                </div>
-		                <div class="modal-body">
-		                    
-		                    <div class="reg-block" style="width:100%;">
-
-		                        <!-- form   -->
-		                        <form name="frm" novalidate>
-		                                
-						            <div class="row">
-						                <div class="col col-md-6">
-						                    
-						                    <!-- nombre -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-home"></i></span>
-						                        <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="frmData.nombre" required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
-						                        <span ng-show="frm.nombre.$error.required">El campo es obligatorio.</span>
-						                    </div>   
-
-						                    
-
-						                </div>
-						                <div class="col col-md-6">
-
-						                	<!-- tel -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-						                        <input name="tel" type="number" max="9999999999" class="form-control" placeholder="Telefono" ng-model="frmData.tel" required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
-						                        <span ng-show="frm.tel.$error.required">El campo es obligatorio.</span>
-						                    </div>  
-
-						                    
-
-						                </div>
-						            </div>
-
-						            <div class="row">
-						            	<div class="col col-md-12">
-
-						            		<!-- direccion -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-map"></i></span>
-						                        <input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="frmData.direccion" required/>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.email.$touched">
-						                        <span ng-show="frm.direccion.$error.required">El campo es obligatorio.</span>
-						                    </div>
-
-						            		<!-- latitud -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-						                        <input name="latitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.latitud" disabled required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
-						                        <span ng-show="frm.latitud.$error.required">El campo es obligatorio.</span>
-						                    </div>
-
-						                    <!-- longitud -->
-						                    <div class="input-group margin-bottom-20">
-						                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-						                        <input name="longitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.longitud" disabled required>
-						                    </div>
-						                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
-						                        <span ng-show="frm.longitud.$error.required">El campo es obligatorio.</span>
-						                    </div>
-
-						                    <!-- mapa -->
-						                    <div>
-											    <ng-map zoom="11" center="{{frmData.direccion}}" style="width:100%; height:400px" on-click="getpos($event)" on-load="onLoad()">
-											      <marker position="{{frmData.direccion}}" title="{{frmData.direccion}}" on-dragend="getpos($event)" on-click="getpos($event)"></marker>
-											      <!-- <marker position="Brampton Canada" title="Brampton Canada"></marker> -->
-											    </ng-map>
-											</div>
-						            		
-						            	</div>
-						            </div>
-		                            
-		                        </form>
-		                        <!-- fin form editar usuario -->		                                       
-		                    </div>
-		                </div>
-		                <div class="modal-footer">
-		                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
-		                    <button ng-if="frmTitulo == 'Editar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid" data-dismiss="modal">Modificar</button>
-		                    <button ng-if="frmTitulo == 'Agregar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid" data-dismiss="modal">Agregar</button>
+		<!-- GRILLA FOTOS -->
+		<div class="panel panel-u margin-bottom-40" ng-show="grillaFotosShow">
+		    <div class="panel-heading">
+		        <div class="row">
+		            <div class="col-md-5">
+		                <h3 style="margin:0; color:white;"><i class="fa fa-picture-o"></i>{{grillaFotosTitulo}}</h3>
+		            </div>
+		            <div class="col-md-6">
+		            	<div class="inline-block">
+		            		<input type="file" ng-model="files" name="files" multiple accept="image/*" maxsize="5000" required base-sixty-four-input>
+		            	</div>
+							
+						<div class="inline-block" ng-if="files != null">
+		                	<button class="btn btn-u" title="Agregar" ng-click="agregarFotos()"><i class="fa fa-plus"></i></button>
 		                </div>
 		            </div>
-		        </div>
-		    </div>	    
+		            <div class="col-md-1">
+		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerFotos(localActual)"><i class="fa fa-refresh"></i></button>
+		            </div>
+		        </div>     
+		    </div>
+		    <!-- UI-GRID -->
+		    <div ui-grid="gridFotosOptions" class="myGrid" style="height:300px !important;"></div>  
 		</div>
+
+		<!-- Popup frm -->
+	    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+	        
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                    <h4 class="modal-title">{{frmTitulo}}</h4>
+	                </div>
+	                <div class="modal-body">
+	                    
+	                    <div class="reg-block" style="width:100%;">
+
+	                        <!-- form   -->
+	                        <form name="frm" novalidate>
+	                                
+					            <div class="row">
+					                <div class="col col-md-6">
+					                    
+					                    <!-- nombre -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-home"></i></span>
+					                        <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="frmData.nombre" required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
+					                        <span ng-show="frm.nombre.$error.required">El campo es obligatorio.</span>
+					                    </div>   
+
+					                    
+
+					                </div>
+					                <div class="col col-md-6">
+
+					                	<!-- tel -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+					                        <input name="tel" type="number" max="9999999999" class="form-control" placeholder="Telefono" ng-model="frmData.tel" required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.nombre.$touched">
+					                        <span ng-show="frm.tel.$error.required">El campo es obligatorio.</span>
+					                    </div>  
+
+					                    
+
+					                </div>
+					            </div>
+
+					            <div class="row">
+					            	<div class="col col-md-12">
+
+					            		<!-- direccion -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-map"></i></span>
+					                        <input name="direccion" type="text" class="form-control" placeholder="Dirección" ng-model="frmData.direccion" required/>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.email.$touched">
+					                        <span ng-show="frm.direccion.$error.required">El campo es obligatorio.</span>
+					                    </div>
+
+					            		<!-- latitud -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+					                        <input name="latitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.latitud" disabled required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
+					                        <span ng-show="frm.latitud.$error.required">El campo es obligatorio.</span>
+					                    </div>
+
+					                    <!-- longitud -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+					                        <input name="longitud" type="text" class="form-control" placeholder="Haga click en la marca del mapa" ng-model="frmData.longitud" disabled required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.password1.$touched">
+					                        <span ng-show="frm.longitud.$error.required">El campo es obligatorio.</span>
+					                    </div>
+
+					                    <!-- mapa -->
+					                    <div>
+										    <ng-map zoom="11" center="{{frmData.direccion}}" style="width:100%; height:400px" on-click="getpos($event)" on-load="onLoad()">
+										      <marker position="{{frmData.direccion}}" title="{{frmData.direccion}}" on-dragend="getpos($event)" on-click="getpos($event)"></marker>
+										      <!-- <marker position="Brampton Canada" title="Brampton Canada"></marker> -->
+										    </ng-map>
+										</div>
+					            		
+					            	</div>
+					            </div>
+	                            
+	                        </form>
+	                        <!-- fin form editar usuario -->		                                       
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
+	                    <button ng-if="frmTitulo == 'Editar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid" data-dismiss="modal">Modificar</button>
+	                    <button ng-if="frmTitulo == 'Agregar Local'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid" data-dismiss="modal">Agregar</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</div>
 </div>
 
@@ -153,3 +180,8 @@
     <br/>Address : <input ng-model="direccion" />
   </div> -->
 
+<!-- <div>
+	<ng-map zoom="11" center="current" style="width:600px; height:400px">
+  		<marker position="current" title="gg" ></marker>
+	</ng-map>
+</div> -->

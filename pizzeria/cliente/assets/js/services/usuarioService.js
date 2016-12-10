@@ -8,7 +8,7 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){ 
+  			function(retorno) { 
   				//console.log(retorno);			   
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
@@ -25,7 +25,7 @@ angular.module('miSitio')
     				return respuesta;	
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -37,8 +37,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){     
-        console.log(retorno); 
+  			function(retorno) {     
+        //console.log(retorno); 
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
     				respuesta.mensaje = "Cambio de estado ok!";
@@ -50,7 +50,7 @@ angular.module('miSitio')
     				return respuesta;
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -62,8 +62,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){ 
-  				console.log(retorno);			   
+  			function(retorno) { 
+  				//console.log(retorno);			   
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
     				respuesta.datos = retorno.data.datos;
@@ -80,7 +80,7 @@ angular.module('miSitio')
     				return respuesta;	
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -92,8 +92,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){    
-        console.log(retorno);
+  			function(retorno) {    
+        //console.log(retorno);
 				if (retorno.data.mensaje == "ok") {
 					respuesta.estado = true;
 	    			respuesta.mensaje = 'Lista actualizada';
@@ -114,7 +114,7 @@ angular.module('miSitio')
 					return respuesta;	
 				}	
 			},
-			function(error){ 
+			function(error) { 
 				respuesta.estado = false;
 				respuesta.mensaje = "Problema de conexión con el servidor.";
 				respuesta.datos = 'error';
@@ -127,7 +127,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsUsuario, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){         
+  			function(retorno) {      
+          //console.log(retorno);   
     			if (retorno.data.mensaje != "error") {
     				respuesta.estado = true;
 	    			respuesta.mensaje = 'Acabamos de enviarte el password. Revisa tu casilla de e-mail :)';
@@ -139,7 +140,7 @@ angular.module('miSitio')
     				return respuesta;
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;

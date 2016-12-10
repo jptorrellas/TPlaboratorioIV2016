@@ -8,8 +8,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){ 
-          console.log(retorno);			   
+  			function(retorno) { 
+          // console.log(retorno);			   
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
 	    			return respuesta;
@@ -25,7 +25,7 @@ angular.module('miSitio')
     				return respuesta;	
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -37,7 +37,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){         
+  			function(retorno) { 
+          //console.log(retorno);        
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
     				respuesta.mensaje = "Cambio de estado ok!";
@@ -49,7 +50,7 @@ angular.module('miSitio')
     				return respuesta;
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -61,8 +62,8 @@ angular.module('miSitio')
 
     	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
-  			function(retorno){ 
-  				console.log(retorno);			   
+  			function(retorno) { 
+  				// console.log(retorno);			   
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
     				respuesta.datos = retorno.data.datos;
@@ -79,7 +80,7 @@ angular.module('miSitio')
     				return respuesta;	
     			}	
   			},
-  			function(error){ 
+  			function(error) { 
     			respuesta.estado = false;
     			respuesta.mensaje = "Problema de conexión con el servidor.";
     			return respuesta;
@@ -92,7 +93,7 @@ angular.module('miSitio')
     	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
-        //console.log(retorno);   
+        console.log(retorno);   
 				if (retorno.data.mensaje == "ok") {
 					respuesta.estado = true;
 	    			respuesta.mensaje = 'Lista actualizada';
@@ -113,7 +114,7 @@ angular.module('miSitio')
 					return respuesta;	
 				}	
 			},
-			function(error){ 
+			function(error) { 
 				respuesta.estado = false;
 				respuesta.mensaje = "Problema de conexión con el servidor.";
 				respuesta.datos = 'error';
@@ -121,5 +122,94 @@ angular.module('miSitio')
 			}
     	);
 	};
+
+  this.listadoFotos = function(data) {
+
+      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      .then(
+        function(retorno) { 
+        // console.log(retorno);   
+        if (retorno.data.mensaje == "ok") {
+          respuesta.estado = true;
+            respuesta.mensaje = 'Lista actualizada';
+            respuesta.datos = retorno.data.datos;
+            return respuesta;
+        }
+
+        if (retorno.data.mensaje == "error") {
+          respuesta.estado = false;
+          respuesta.mensaje = "No hay fotos para mostrar";
+          respuesta.datos = 'error';
+          return respuesta;
+        }
+        if (retorno.data.mensaje != "ok" && retorno.data != "error") {
+          respuesta.estado = false;
+          respuesta.mensaje = "ERROR DESCONOCIDO";
+          respuesta.datos = 'error';
+          return respuesta; 
+        } 
+      },
+      function(error) { 
+        respuesta.estado = false;
+        respuesta.mensaje = "Problema de conexión con el servidor.";
+        respuesta.datos = 'error';
+        return respuesta;
+      }
+      );
+  };
+
+  this.altaFotos = function(data) { 
+
+      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      .then(
+        function(retorno) { 
+          // console.log(retorno);         
+          if (retorno.data.mensaje == "ok") {
+            respuesta.estado = true;
+            return respuesta;
+          }
+          if (retorno.data.mensaje == "error") {
+            respuesta.estado = false;
+            respuesta.mensaje = "Problema al intentar subir fotos";
+            return respuesta;
+          }
+          if (retorno.data.mensaje != "ok" && retorno.data != "error") {
+            respuesta.estado = false;
+            respuesta.mensaje = "ERROR DESCONOCIDO";
+            return respuesta; 
+          } 
+        },
+        function(error) { 
+          respuesta.estado = false;
+          respuesta.mensaje = "Problema de conexión con el servidor.";
+          return respuesta;
+        }
+      );
+  };
+
+  this.cambiaEstadoFoto = function(data) {
+
+      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      .then(
+        function(retorno) { 
+          //console.log(retorno);        
+          if (retorno.data.mensaje == "ok") {
+            respuesta.estado = true;
+            respuesta.mensaje = "Cambio de estado ok!";
+            return respuesta;
+          }
+          else{
+            respuesta.estado = false;
+            respuesta.mensaje = "Hubo un problema al intentar cambiar el estado.";
+            return respuesta;
+          } 
+        },
+        function(error) { 
+          respuesta.estado = false;
+          respuesta.mensaje = "Problema de conexión con el servidor.";
+          return respuesta;
+        }
+      );
+  };
 });
 

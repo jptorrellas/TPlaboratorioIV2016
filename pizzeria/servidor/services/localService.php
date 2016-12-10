@@ -165,6 +165,84 @@ switch ($objRecibido->accion) {
     	}
 		break;
 
+	case 'listadoFotos':
+		
+		$listaElementos = $crud->selectList("*", "locales_fotos", "id_local = '$objRecibido->idLocal'");
+		if ($listaElementos != false && $listaElementos != null) {
+    		
+    		$respuesta['mensaje'] = 'ok';
+			$respuesta['datos'] = $listaElementos;
+			echo json_encode($respuesta);
+    	}
+    	else {
+    		$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);	
+		}	
+		break;
+
+	case 'cambiaEstadoFoto':
+    	
+    	$foto = $crud->select("*", "locales_fotos", "id = '$objRecibido->idFoto'");
+
+		if ($foto != false && $foto != null) {
+
+			if ($foto->estado == 1) {
+				$foto->estado = 0;
+			}
+			else {
+				$foto->estado = 1;
+			}
+
+	    	if ($crud->update("locales_fotos", "estado = '$foto->estado'", "id = '$objRecibido->idFoto'")) {
+	    		$respuesta['mensaje'] = 'ok';
+				echo json_encode($respuesta);
+	    	}
+	    	else {
+	    		$respuesta['mensaje'] = 'error';
+				echo json_encode($respuesta);
+	    	}
+	    }
+	    else {
+	    	$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);
+	    }
+
+    	break;
+
+    case 'altaFotos':
+
+    	if (isset($objRecibido->fotos) && $objRecibido->fotos != null && count($objRecibido->fotos) > 0) {
+					
+			ini_set('date.timezone','America/Buenos_Aires'); 
+			$fechaActual = date("Y-m-d_H-i-s");
+
+			for ($i=0; $i < count($objRecibido->fotos); $i++) { 
+				// Obtiene extension del archivo a subir
+				$extension = explode("/", $objRecibido->fotos[$i]->filetype);
+				$extension = $extension[1];
+				$Base64Img = base64_decode($objRecibido->fotos[$i]->base64);
+			
+				$nombreFoto = $objRecibido->idLocal.'-'.$fechaActual.'-'.$i.'.'.$extension;
+				$archivoImagen = '../img/locales/'.$nombreFoto;
+			
+				file_put_contents($archivoImagen, $Base64Img);
+
+				// inserta nombre de foto subida
+				$crud->insert("locales_fotos", "id_local, foto", "'$objRecibido->idLocal', '$nombreFoto'");
+			}
+
+			$respuesta['mensaje'] = 'ok';
+			echo json_encode($respuesta);
+		}
+		else {
+			
+			$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);
+			
+		}
+		
+		break;
+
 	default:
 		echo "error";
 		break;

@@ -3,7 +3,10 @@ angular.module('miSitio')
 .controller('GrillaLocalesCtrl', function($scope, $state, growl, i18nService, uiGridConstants, NgMap, localService, usuarioFactory, urlFactory) {
 
   $scope.usuario = usuarioFactory.payload;
+  $scope.urlimg = urlFactory.imgLocal;
   $scope.grillaTitulo = 'Lista de Locales';
+  $scope.localActual = '';
+
 
   $scope.traerTodo = function() {
     $scope.traerTodoData = { idUsuario: $scope.usuario.id, rolUsuario: $scope.usuario.rol, filtro: 'grilla', accion: 'listado' };
@@ -21,7 +24,6 @@ angular.module('miSitio')
     );
   };
   $scope.traerTodo();
-  
   
   $scope.cambiaEstadoItem = function(idItem) {
 
@@ -107,7 +109,7 @@ angular.module('miSitio')
     };
   };
   
-  // Objeto de configuracion de la grilla.
+  // Objeto de configuracion de la grilla Locales.
   $scope.gridOptions = {
     // Configuracion para exportar datos.
     exporterCsvFilename: $scope.grillaTitulo + '.csv',
@@ -133,6 +135,7 @@ angular.module('miSitio')
     }
   };
   $scope.gridOptions.enableGridMenu = true;
+  $scope.gridOptions.gridMenuShowHideColumns = false;
   $scope.gridOptions.selectAll = true;
 
   // Configuracion de la paginacion
@@ -176,42 +179,31 @@ angular.module('miSitio')
         ,
         headerCellClass: 'center', enableFiltering: false, enableColumnMenu: false
       },
-      { field: 'encargado', name: 'encargado', cellClass: 'ui-grid-vertical-center', 
+      { field: 'fotos', name: 'fotos', cellClass: 'ui-grid-vertical-center',
         cellTemplate: 
         '<div>\
-          <button class="btn btn-warning btn-xs rounded-x" style="height:25px; width:25px;" title="Editar" data-toggle="modal" data-target="#popupfrm" ng-click="grid.appScope.editarItem(row.entity);" ><i class="fa fa-user"></i></button>\
+          <button class="btn btn-warning btn-xs rounded-x" style="height:25px; width:25px;" title="Fotos" ng-click="grid.appScope.traerFotos(row.entity);" ><i class="fa fa-picture-o"></i></button>\
         </div>'
         ,
         headerCellClass: 'center', enableFiltering: false, enableColumnMenu: false
-      },
-      { field: 'empleados', name: 'empleados', cellClass: 'ui-grid-vertical-center', 
-        cellTemplate: 
-        '<div>\
-          <button class="btn btn-warning btn-xs rounded-x" style="height:25px; width:25px;" title="Editar" data-toggle="modal" data-target="#popupfrm" ng-click="grid.appScope.editarItem(row.entity);" ><i class="fa fa-users"></i></button>\
-        </div>'
-        ,
-        headerCellClass: 'center', enableFiltering: false, enableColumnMenu: false
-      }
+      }   
     ];
   };
 
   // Oculta columnas según rol usuario
   var posEstado = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('estado');
   var posDatos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('datos');
-  var posEncargado = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('encargado');
-  var posEmpleados = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('empleados');
+  var posFotos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('fotos');
   
   if ($scope.usuario.rol == 'admin') {
     $scope.gridOptions.columnDefs[posEstado].visible = true;
     $scope.gridOptions.columnDefs[posDatos].visible = true;
-    $scope.gridOptions.columnDefs[posEncargado].visible = true;
-    $scope.gridOptions.columnDefs[posEmpleados].visible = true;
+    $scope.gridOptions.columnDefs[posFotos].visible = true;
   }
   else {
     $scope.gridOptions.columnDefs[posEstado].visible = false;
     $scope.gridOptions.columnDefs[posDatos].visible = false;
-    $scope.gridOptions.columnDefs[posEncargado].visible = false;
-    $scope.gridOptions.columnDefs[posEmpleados].visible = true;
+    $scope.gridOptions.columnDefs[posFotos].visible = false;
   }
 
 
@@ -242,6 +234,110 @@ angular.module('miSitio')
     NgMap.getMap().then(function (map) {
         //console.log(map.getBounds().toString());
     });
+  };
+
+  ///////////////// FOTOS LOCALES /////////////////
+
+  $scope.traerFotos = function(item) {
+    $scope.localActual = item;
+    $scope.grillaFotosShow = true;
+    $scope.grillaFotosTitulo = 'Fotos del local: ' + item.nombre;
+    $scope.traerFotosData = { idLocal: item.id, accion: 'listadoFotos' };
+    $scope.files = null;
+    
+    localService.listadoFotos($scope.traerFotosData)
+    .then( 
+      function(respuesta) { 
+        if (respuesta.estado == true) {
+          $scope.gridFotosOptions.data = respuesta.datos;
+        }
+        else {
+          growl.error(respuesta.mensaje, {ttl: 3000});
+        }
+      }
+    );
+  };
+
+  $scope.agregarFotos= function() {
+    $scope.agregarFotosData =
+    {
+      fotos: $scope.files,
+      idLocal: $scope.localActual.id,
+      accion: 'altaFotos'
+    };
+        
+    localService.altaFotos($scope.agregarFotosData)
+    .then( 
+      function(respuesta) {          
+        if (respuesta.estado == true) {
+          growl.success("Fotos agregadas ok!", {ttl: 3000});
+          $scope.traerFotos();       
+        }
+        else {
+          growl.error(respuesta.mensaje, {ttl: 3000});
+        }
+      }
+    );
+
+  };
+
+  $scope.cambiaEstadoFoto = function(idItem) {
+
+    $scope.cambiaEstadoData = { idFoto : idItem, accion : 'cambiaEstadoFoto' };
+
+    localService.cambiaEstadoFoto($scope.cambiaEstadoData)
+    .then( 
+      function(respuesta) { 
+        if (respuesta.estado == true) {
+          growl.success(respuesta.mensaje, {ttl: 3000});
+          $scope.traerTodo();
+        }
+        else {
+          growl.error(respuesta.mensaje, {ttl: 3000});
+          $scope.traerTodo();
+        }
+      }
+    ); 
+  };
+
+
+
+  // Objeto de configuracion de la grilla Fotos.
+  $scope.gridFotosOptions = {};
+    
+
+  // Configuracion de la paginacion
+  $scope.gridFotosOptions.paginationPageSizes = [25, 50, 75];
+  $scope.gridFotosOptions.paginationPageSize = 25;
+
+  $scope.gridFotosOptions.columnDefs = columnDefsFotos();
+  $scope.gridFotosOptions.rowHeight = 60;
+  // Activo la busqueda en todos los campos.
+  $scope.gridFotosOptions.enableFiltering = true;
+  // Configuracion del idioma.
+  i18nService.setCurrentLang('es');
+
+
+  function columnDefsFotos () {
+    
+    return [       
+      { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
+      { field: 'foto', name: 'foto', headerCellClass: 'center', cellTemplate:'<div class="ui-grid-cell-contents" style="width:100%; height: 100%; text-align:center;"><img style="width:50px; height:50px;" ng-src="{{grid.appScope.urlimg}}{{row.entity.foto}}"></div>', width: 80, enableFiltering: false, enableColumnMenu: false },
+      { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
+        cellTemplate: 
+        '<div>\
+          <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoFoto(row.entity.id)">\
+        </div>', 
+        width: 140,
+        filter: { type: uiGridConstants.filter.SELECT,
+          selectOptions: [
+            {value: '1', label: 'activo'},
+            {value: '0', label: 'inactivo'}
+          ] 
+        },
+        cellFilter: 'estado'
+      }
+    ];
   };
 
 
