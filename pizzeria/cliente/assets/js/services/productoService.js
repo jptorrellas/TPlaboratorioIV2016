@@ -1,12 +1,12 @@
 angular.module('miSitio')
 
-.service('localService', function($http, urlFactory) {
+.service('productoService', function($http, urlFactory) {
 	
 	var respuesta = {};	
 
 	this.alta = function(data) { 
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
           // console.log(retorno);			   
@@ -16,7 +16,7 @@ angular.module('miSitio')
     			}
     			if (retorno.data.mensaje == "error") {
     				respuesta.estado = false;
-    				respuesta.mensaje = "Ya existe un local con ese nombre";
+    				respuesta.mensaje = "Ya existe un producto con esa descripcion";
     				return respuesta;
     			}
     			if (retorno.data.mensaje != "ok" && retorno.data != "error") {
@@ -35,10 +35,10 @@ angular.module('miSitio')
 
 	this.cambiaEstado = function(data) {
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
-          //console.log(retorno);        
+          // console.log(retorno);        
     			if (retorno.data.mensaje == "ok") {
     				respuesta.estado = true;
     				respuesta.mensaje = "Cambio de estado ok!";
@@ -60,7 +60,7 @@ angular.module('miSitio')
 
 	this.modificacion = function(data) { 
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
   				// console.log(retorno);			   
@@ -69,7 +69,7 @@ angular.module('miSitio')
     				respuesta.datos = retorno.data.datos;
 	    			return respuesta;
     			}
-    			if (retorno.data.mensaje == "error. no existe el local") {
+    			if (retorno.data.mensaje == "error. no existe el producto") {
     				respuesta.estado = false;
     				respuesta.mensaje = "El local que intenta editar ya no existe en el sistema. Por favor actualice la grilla.";
     				return respuesta;
@@ -90,7 +90,7 @@ angular.module('miSitio')
 
 	this.listado = function(data) {
 
-    	return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
         // console.log(retorno);   
@@ -125,7 +125,7 @@ angular.module('miSitio')
 
   this.listadoFotos = function(data) {
 
-      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
       .then(
         function(retorno) { 
         // console.log(retorno);   
@@ -160,7 +160,7 @@ angular.module('miSitio')
 
   this.altaFotos = function(data) { 
 
-      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
       .then(
         function(retorno) { 
           // console.log(retorno);         
@@ -189,7 +189,7 @@ angular.module('miSitio')
 
   this.cambiaEstadoFoto = function(data) {
 
-      return $http.post(urlFactory.wsLocal, data,  { timeout: 10000 })
+      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
       .then(
         function(retorno) { 
           //console.log(retorno);        

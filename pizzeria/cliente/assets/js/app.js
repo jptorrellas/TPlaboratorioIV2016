@@ -76,13 +76,13 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		.state('menu.adminGrillaLocalesFotos', {
+		.state('menu.adminGrillaProductos', {
 			cache: false,
-			url: '/grillaLocalesFotos',
+			url: '/grillaProductos',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaLocalesFotos.html',
-			    controller: 'GrillaLocalesFotosCtrl'
+			    templateUrl: 'templates/grillas/grillaProductos.html',
+			    controller: 'GrillaProductosCtrl'
 			  }
 			}
 		})

@@ -1,106 +1,130 @@
-<div style="padding-top:50px; width:100%; background-image:url('assets/img/bg/bg-productos.jpg');">
-	<div class="container" style="width:90%; height:100%;">
-
-		<div class="panel panel-u margin-bottom-40" style="overflow:auto;">
+<div style="padding-top:50px; width:100%; background-image:url('assets/img/bg/bg-argenta.jpg');" ng-controller="GrillaProductosCtrl">
+	<div class="container" style="width:90%; margin-top:25px;">
+		<div class="row" style="text-align:right; margin:0px;">
+			<button class="btn btn-u" title="Volver" onclick="history.back()"><i class="fa fa-long-arrow-left"></i></button>
+		</div>
+		
+		<!-- GRILLA LOCAES -->
+		<div class="panel panel-u margin-bottom-40">
 		    <div class="panel-heading">
 		        <div class="row">
 		            <div class="col-md-10">
 		                <h3 style="margin:0; color:white;"><i class="fa fa-tasks"></i>{{grillaTitulo}}</h3>
 		            </div>
 		            <div class="col-md-1">
-		                <button  ng-if="rol == 'admin' || rol == 'vendedor'" class="btn btn-u" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
+		                <button class="btn btn-u" title="Agregar" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
 		            </div>
 		            <div class="col-md-1">
-		                <button class="btn btn-u" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
+		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
 		            </div>
 		        </div>     
 		    </div>
-		    <table class="table table-hover" style="vertical-align:middle !important;">
-		        <thead>
-		            <tr>
-		                <th style="text-align:center">#</th>
-		                <th style="text-align:center">FOTO</th>
-		                <th>DESCRIPCION</th>
-		                <th ng-if="rol == 'admin'" style="text-align:center;">OPCIONES</th>
-		            </tr>
-		        </thead>
-		        <tbody ng-repeat="item in directivaGrillaDatos.lista.datos" style="align:middle;">          
-		            <tr ng-if="id != item.id">
-		                <td style="text-align:center;">{{item.id}}</td>
-		                <td style="text-align:center !important;"><!-- <div style="width:50px; height:50px;"> --><img style="width:50px; height:50px;" ng-src="{{urlimg}}{{item.foto}}"><!-- </div> --></td>
-		                <td>{{item.descripcion}}</td>
-		                <td ng-if="rol == 'admin' || rol == 'vendedor'" style="text-align:center;">
-		                    <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#popupfrm" ng-click="editarItem(item);" ><i class="fa fa-pencil"></i> Editar</button>
-		                    <button class="btn btn-danger btn-xs" ng-click="borrarItem(item, $index);"><i class="fa fa-trash"></i> Borrar</button>
-		                </td>
-		            </tr>
-		        </tbody>
-		    </table>
+		    <!-- UI-GRID -->
+		    <div ui-grid="gridOptions" class="myGrid" style="height:300px !important;" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter></div>	    
+		</div>
 
-		    <!-- Popup frm -->
-		    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;"> 		        
-		        <div class="modal-dialog">
-		            <div class="modal-content">
-		                <div class="modal-header">
-		                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="modificarFoto(false)">×</button>
-		                    <h4 class="modal-title">{{frmTitulo}}</h4>
-		                </div>
-		                <div class="modal-body">		                    
-		                    <div class="reg-block" style="width:90%;">
-
-		                        <!-- form   -->
-		                        <form name="frm" novalidate>
-		                                
-		                            <div class="input-group margin-bottom-20 center" style="width:100%;" ng-show="cargaFotoShow">
-		                                <img ng-src="{{fotoAGuardar}}" class="" style="height:100px; width:100px; border: 1px solid #ccc;" />
-		                            </div>
-
-		                            <div class="input-group margin-bottom-20">
-		                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-		                                <input name="descripcion" type="text" class="form-control" placeholder="Descripcion" ng-model="frmData.descripcion" required/>
-		                            </div>
-		                            <div class="messages" ng-show="frm.$submitted || frm.descripcion.$touched">
-		                                <span ng-show="frm.descripcion.$error.required">El campo es obligatorio.</span>
-		                            </div>
-
-		                            <div class="row">
-		                                <div class="col-md-12">
-		                                    <button type="button" class="btn btn-default btn-block" ng-model="btnModificarFoto" ng-click="modificarFoto()">{{btnModificarFoto}}</button>
-		                                </div>
-		                            </div>
-		                            <div class="row" ng-show="cargaFotoShow" style="margin-top:15px;">
-		                                <div class="col-md-12">
-		                                    <label for="file" class="input input-file">
-		                                        <div class="button"><input type="file" name="file" onchange="this.parentNode.nextSibling.value = this.value" id="fileInput2">Buscar</div><input type="text" placeholder="Cargar una imagen" readonly="">
-		                                    </label>
-		                                </div>
-
-		                                <div class="col-md-12">
-		                                    <div class="row">
-		                                        <div class="col-md-12">
-		                                            <h6>Imagen elegida:</h6>
-		                                        </div>
-		                                    </div>
-		                                    <div class="row"  style="height:100px; width:100px;">
-		                                        <div class="col-md-12">
-		                                            <img-crop image="imagenElegida" area-type="square" result-image="fotoAGuardar" on-load-done="imagenAbierta = 1" result-image-size="150" area-min-size="150" height="150"></img-crop>
-		                                        </div>
-		                                    </div>                   
-		                                </div>     
-		                            </div>
-		                        </form>
-		                        <!-- fin form editar usuario -->		                                       
-		                    </div>
-		                </div>
-		                <div class="modal-footer">
-		                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal" ng-click="modificarFoto(false)">Cerrar</button>
-		                    <button ng-if="frmTitulo == 'Editar Producto'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Modificar</button>
-		                    <button ng-if="frmTitulo == 'Agregar Producto'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid || frmData.password1 != frmData.password2" data-dismiss="modal">Agregar</button>
+		<!-- GRILLA FOTOS -->
+		<div class="panel panel-u margin-bottom-40" ng-show="grillaFotosShow">
+		    <div class="panel-heading">
+		        <div class="row">
+		            <div class="col-md-5">
+		                <h3 style="margin:0; color:white;"><i class="fa fa-picture-o"></i>{{grillaFotosTitulo}}</h3>
+		            </div>
+		            <div class="col-md-6">
+		            	<div class="inline-block">
+		            		<input type="file" ng-model="files" name="files" multiple accept="image/*" maxsize="5000" required base-sixty-four-input>
+		            	</div>
+							
+						<div class="inline-block" ng-if="files != null">
+		                	<button class="btn btn-u" title="Agregar" ng-click="agregarFotos()"><i class="fa fa-plus"></i></button>
 		                </div>
 		            </div>
-		        </div>
-		    </div>		    
+		            <div class="col-md-1">
+		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerFotos(productoActual)"><i class="fa fa-refresh"></i></button>
+		            </div>
+		        </div>     
+		    </div>
+		    <!-- UI-GRID -->
+		    <div ui-grid="gridFotosOptions" class="myGrid" style="height:300px !important;"></div>  
 		</div>
+
+		<!-- Popup frm -->
+	    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+	        
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                    <h4 class="modal-title">{{frmTitulo}}</h4>
+	                </div>
+	                <div class="modal-body">
+	                    
+	                    <div class="reg-block" style="width:100%;">
+
+	                        <!-- form   -->
+	                        <form name="frm" novalidate>
+	                                
+					            <div class="row">
+					                <div class="col col-md-6">
+					                    
+					                    <!-- descripcion -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-home"></i></span>
+					                        <input name="descripcion" type="text" class="form-control" placeholder="Descripción" ng-model="frmData.descripcion" required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.descripcion.$touched">
+					                        <span ng-show="frm.descripcion.$error.required">El campo es obligatorio.</span>
+					                    </div>    
+
+					                </div>
+					                <div class="col col-md-6">
+
+					                	<!-- precio -->
+					                    <div class="input-group margin-bottom-20">
+					                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+					                        <input name="precio" type="decimal" min="10" max="1000" class="form-control" placeholder="Precio" ng-model="frmData.precio" required>
+					                    </div>
+					                    <div class="messages" ng-show="frm.$submitted || frm.precio.$touched">
+					                        <span ng-show="frm.precio.$error.required">El campo es obligatorio.</span>
+					                    </div>  
+
+					                </div>
+					            </div>
+
+					            <div class="row">
+					            	<div class="col col-md-12">
+
+                               			<!-- ingredientes -->
+                               			<textarea name="ingredientes" rows="3" placeholder="Ingredientes" style="width:100%; resize:none;" ng-model="frmData.ingredientes" required></textarea>
+                               			<div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.ingredientes.$touched">
+					                    	<span ng-show="frm.ingredientes.$error.required">El campo es obligatorio.</span>
+					                	</div>
+
+                               			<!-- cbo locales -->
+                               			<label class="select" ng-if="usuarioActual.rol == 'admin' && frmTitulo == 'Agregar Producto'">
+			                                <select style="width: 528px; height:28px;" name="local" ng-model="frmData.local" required>
+			                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
+			                   				</select>
+			                                <i style="top:10px; background:none;"></i>
+			                            </label>
+			                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.local.$touched">
+					                    	<span ng-show="frm.local.$error.required">El campo es obligatorio.</span>
+					                	</div>
+
+					            	</div>
+					            </div>
+	                            
+	                        </form>
+	                        <!-- fin form -->		                                       
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
+	                    <button ng-if="frmTitulo == 'Editar Producto'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid" data-dismiss="modal">Modificar</button>
+	                    <button ng-if="frmTitulo == 'Agregar Producto'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid" data-dismiss="modal">Agregar</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</div>
 </div>
-

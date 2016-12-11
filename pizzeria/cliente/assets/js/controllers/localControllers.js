@@ -113,20 +113,20 @@ angular.module('miSitio')
   $scope.gridOptions = {
     // Configuracion para exportar datos.
     exporterCsvFilename: $scope.grillaTitulo + '.csv',
-    // exporterCsvColumnSeparator: ',',
-    exporterPdfDefaultStyle: {fontSize: 9},
-    exporterPdfTableStyle: {margin: [30, 30, 30, 30]},
-    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+    exporterCsvColumnSeparator: ';',
+    exporterPdfDefaultStyle: {fontSize: 8},
+    exporterPdfTableStyle: {margin: [0, 30, 0, 30]},
+    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'white',  fillColor: '#72c02c'},
     exporterPdfHeader: { text: $scope.grillaTitulo, style: 'headerStyle' },
     exporterPdfFooter: function ( currentPage, pageCount ) {
       return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
     },
     exporterPdfCustomFormatter: function ( docDefinition ) {
-      docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
-      docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+      docDefinition.styles.headerStyle = { fontSize: 22, bold: true, alignment: 'center', color: '#72c02c' };
+      docDefinition.styles.footerStyle = { fontSize: 10, bold: true, alignment: 'center' };
       return docDefinition;
     },
-    exporterPdfOrientation: 'portrait',
+    exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'LETTER',
     exporterPdfMaxGridWidth: 500,
     exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
@@ -137,6 +137,7 @@ angular.module('miSitio')
   $scope.gridOptions.enableGridMenu = true;
   $scope.gridOptions.gridMenuShowHideColumns = false;
   $scope.gridOptions.selectAll = true;
+  $scope.gridOptions.exporterSuppressColumns= [ 'datos', 'fotos' ];
 
   // Configuracion de la paginacion
   $scope.gridOptions.paginationPageSizes = [25, 50, 75];
@@ -253,6 +254,7 @@ angular.module('miSitio')
         }
         else {
           growl.error(respuesta.mensaje, {ttl: 3000});
+          $scope.gridFotosOptions.data = [];
         }
       }
     );
@@ -271,7 +273,7 @@ angular.module('miSitio')
       function(respuesta) {          
         if (respuesta.estado == true) {
           growl.success("Fotos agregadas ok!", {ttl: 3000});
-          $scope.traerFotos();       
+          $scope.traerFotos($scope.localActual);       
         }
         else {
           growl.error(respuesta.mensaje, {ttl: 3000});

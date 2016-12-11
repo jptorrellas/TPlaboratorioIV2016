@@ -50,7 +50,12 @@
                 <li class="page-scroll">
                     <a ng-href="#/menu/grillaLocales">LOCALES</a>
                 </li>
-            </ul>           
+            </ul>         
+            <ul ng-if="usuarioActual.rol != 'cliente'" class="nav navbar-nav">
+                <li class="page-scroll">
+                    <a ng-href="#/menu/grillaProductos">PRODUCTOS</a>
+                </li>
+            </ul>   
 
 
             
