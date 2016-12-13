@@ -14,6 +14,7 @@ angular.module('miSitio')
 	var varWsUsuario        =  'usuarioService.php';
 	var varWsProducto       =  'productoService.php';
 	var varWsLocal       	=  'localService.php';
+	var varWsPedido       	=  'pedidoService.php';
 
 	return {
  		servidor		 : varServidor,
@@ -24,6 +25,7 @@ angular.module('miSitio')
  		imgProducto      : varServidor + varImgProducto,
  		wsUsuario        : varServidor + varServices + varWsUsuario,
  		wsProducto       : varServidor + varServices + varWsProducto,
- 		wsLocal       	 : varServidor + varServices + varWsLocal
+ 		wsLocal       	 : varServidor + varServices + varWsLocal,
+ 		wsPedido       	 : varServidor + varServices + varWsPedido
 	}
 });

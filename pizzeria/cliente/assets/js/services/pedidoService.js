@@ -1,12 +1,12 @@
 angular.module('miSitio')
 
-.service('productoService', function($http, urlFactory) {
+.service('pedidoService', function($http, urlFactory) {
 	
 	var respuesta = {};	
 
 	this.alta = function(data) { 
 
-    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsPedido, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
           // console.log(retorno);			   
@@ -35,7 +35,7 @@ angular.module('miSitio')
 
 	this.cambiaEstado = function(data) {
 
-    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsPedido, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
           // console.log(retorno);        
@@ -60,7 +60,7 @@ angular.module('miSitio')
 
 	this.modificacion = function(data) { 
 
-    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsPedido, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
   				// console.log(retorno);			   
@@ -90,7 +90,7 @@ angular.module('miSitio')
 
 	this.listado = function(data) {
 
-    	return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
+    	return $http.post(urlFactory.wsPedido, data,  { timeout: 10000 })
     	.then(
   			function(retorno) { 
         console.log(retorno);   
@@ -103,7 +103,7 @@ angular.module('miSitio')
 
 				if (retorno.data.mensaje == "error") {
 					respuesta.estado = false;
-					respuesta.mensaje = "No hay productos para mostrar";
+					respuesta.mensaje = "No hay pedidos para mostrar";
 					respuesta.datos = 'error';
 					return respuesta;
 				}
@@ -123,93 +123,5 @@ angular.module('miSitio')
     	);
 	};
 
-  this.listadoFotos = function(data) {
-
-      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
-      .then(
-        function(retorno) { 
-        // console.log(retorno);   
-        if (retorno.data.mensaje == "ok") {
-          respuesta.estado = true;
-            respuesta.mensaje = 'Lista actualizada';
-            respuesta.datos = retorno.data.datos;
-            return respuesta;
-        }
-
-        if (retorno.data.mensaje == "error") {
-          respuesta.estado = false;
-          respuesta.mensaje = "No hay fotos para mostrar";
-          respuesta.datos = null;
-          return respuesta;
-        }
-        if (retorno.data.mensaje != "ok" && retorno.data != "error") {
-          respuesta.estado = false;
-          respuesta.mensaje = "ERROR DESCONOCIDO";
-          respuesta.datos = 'error';
-          return respuesta; 
-        } 
-      },
-      function(error) { 
-        respuesta.estado = false;
-        respuesta.mensaje = "Problema de conexión con el servidor.";
-        respuesta.datos = 'error';
-        return respuesta;
-      }
-      );
-  };
-
-  this.altaFotos = function(data) { 
-
-      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
-      .then(
-        function(retorno) { 
-          // console.log(retorno);         
-          if (retorno.data.mensaje == "ok") {
-            respuesta.estado = true;
-            return respuesta;
-          }
-          if (retorno.data.mensaje == "error") {
-            respuesta.estado = false;
-            respuesta.mensaje = "Problema al intentar subir fotos";
-            return respuesta;
-          }
-          if (retorno.data.mensaje != "ok" && retorno.data != "error") {
-            respuesta.estado = false;
-            respuesta.mensaje = "ERROR DESCONOCIDO";
-            return respuesta; 
-          } 
-        },
-        function(error) { 
-          respuesta.estado = false;
-          respuesta.mensaje = "Problema de conexión con el servidor.";
-          return respuesta;
-        }
-      );
-  };
-
-  this.cambiaEstadoFoto = function(data) {
-
-      return $http.post(urlFactory.wsProducto, data,  { timeout: 10000 })
-      .then(
-        function(retorno) { 
-          //console.log(retorno);        
-          if (retorno.data.mensaje == "ok") {
-            respuesta.estado = true;
-            respuesta.mensaje = "Cambio de estado ok!";
-            return respuesta;
-          }
-          else{
-            respuesta.estado = false;
-            respuesta.mensaje = "Hubo un problema al intentar cambiar el estado.";
-            return respuesta;
-          } 
-        },
-        function(error) { 
-          respuesta.estado = false;
-          respuesta.mensaje = "Problema de conexión con el servidor.";
-          return respuesta;
-        }
-      );
-  };
 });
 

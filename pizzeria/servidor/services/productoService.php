@@ -117,20 +117,20 @@ switch ($objRecibido->accion) {
 		if ($objRecibido->filtro == "grilla") {
 		 
 			if ($objRecibido->rolUsuario == 'admin') {
-				$campos = 'locales_productos.*, locales.nombre AS local';
-				$tablas = 'locales_productos, locales';
-				$condiciones = 'locales_productos.id_local = locales.id';
+				$campos = "locales_productos.*, locales.nombre AS local";
+				$tablas = "locales_productos, locales";
+				$condiciones = "locales_productos.id_local = locales.id";
 			}
 			if ($objRecibido->rolUsuario != 'admin' && $objRecibido->localActual != '') {
 				$idLocal = $crud->select("id", "locales", "nombre = '$objRecibido->localActual'");
 
-				$campos = 'locales_productos.*, locales.nombre AS local';
-				$tablas = 'locales_productos, locales';
-				$condiciones = 'locales_productos.id_local = locales.id AND locales_productos.id_local = $idLocal->id';
+				$campos = "locales_productos.*, locales.nombre AS local";
+				$tablas = "locales_productos, locales";
+				$condiciones = "locales_productos.id_local = locales.id AND locales_productos.id_local = '$idLocal->id'";
 			}
 		}
 
-		$listaElementos = $crud->selectList("$campos", "$tablas", "$condiciones");
+		$listaElementos = $crud->selectList($campos, $tablas, $condiciones);
     	
     	if ($listaElementos != null && $listaElementos != false) {
 

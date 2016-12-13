@@ -325,25 +325,33 @@ switch ($objRecibido->accion) {
 
 	case 'listado':
 		
+		// Para cbo clientes en pantalla pedidos
+		if ((isset($objRecibido->filtro) && $objRecibido->filtro == 'cboClientes')) {
+			$listaElementos = $crud->selectList("usuarios.*, roles.descripcion as rol", "usuarios, roles", "usuarios.id_rol = roles.id AND roles.descripcion = 'cliente'");
+			goto respuesta;
+    	}
+		
+
 		// Si el usuario es de tipo admin
-		if ($objRecibido->rolUsuario == 'admin') {
+		if ($objRecibido->rolUsuario == 'admin' || (isset($objRecibido->filtro) && $objRecibido->filtro == 'cboClientes')) {
 			$listaElementos = $crud->selectList("usuarios.*, roles.descripcion as rol", "usuarios, roles", "usuarios.id_rol = roles.id AND usuarios.id != '$objRecibido->idUsuario'");
+			goto respuesta;
     	}
 
 		// Si el usuario es de tipo encargado
 		if ($objRecibido->rolUsuario == 'encargado') {
 			$idLocalUsuario = $crud->select("id_local as idLocal", "locales_plantilla", "id_usuario = '$objRecibido->idUsuario' AND id_rol = 2");
 			$listaElementos = $crud->selectList("DISTINCT usuarios.*, roles.descripcion as rol", "usuarios, roles, locales_plantilla", "usuarios.id_rol = roles.id AND usuarios.id_rol = 4 AND usuarios.id != '$objRecibido->idUsuario' OR (usuarios.id_rol = roles.id AND usuarios.id_rol = 3 AND usuarios.id IN (SELECT  id_usuario FROM locales_plantilla WHERE id_local = '$idLocalUsuario->idLocal'))");
-			
+			goto respuesta;
 		}
 
 		// Si el usuario es de tipo empleado
 		if ($objRecibido->rolUsuario == 'empleado') {
 			$listaElementos = $crud->selectList("DISTINCT usuarios.*, roles.descripcion as rol", "usuarios, roles, locales_plantilla", "usuarios.id_rol = roles.id AND usuarios.id_rol = 4");
-			
+			goto respuesta;
 		}
 
-
+		respuesta:
     	if ($listaElementos != null && $listaElementos != false) {
 
     		// Trae el local al que pertenece el usuario

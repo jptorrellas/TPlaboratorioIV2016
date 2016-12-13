@@ -87,6 +87,17 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
+		.state('menu.adminGrillaPedidos', {
+			cache: false,
+			url: '/grillaPedidos',
+			views: {
+			  'contenido': {
+			    templateUrl: 'templates/grillas/grillaPedidos.html',
+			    controller: 'GrillaPedidosCtrl'
+			  }
+			}
+		})
+
 		//ENCARGADO
 		.state('menu.encargadoGrillaUsuarios', {
 			cache: false,

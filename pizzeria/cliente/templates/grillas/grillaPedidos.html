@@ -1,0 +1,201 @@
+<div style="padding-top:50px; width:100%; background-image:url('assets/img/bg/bg-argenta.jpg');" ng-controller="GrillaPedidosCtrl">
+	<div class="container" style="width:90%; margin-top:25px;">
+		<div class="row" style="text-align:right; margin:0px;">
+			<button class="btn btn-u" title="Volver" onclick="history.back()"><i class="fa fa-long-arrow-left"></i></button>
+		</div>
+		
+		<!-- GRILLA PEDIDOS -->
+		<div class="panel panel-u margin-bottom-40">
+		    <div class="panel-heading">
+		        <div class="row">
+		            <div class="col-md-10">
+		                <h3 style="margin:0; color:white;"><i class="fa fa-tasks"></i>{{grillaTitulo}}</h3>
+		            </div>
+		            <div class="col-md-1">
+		                <button class="btn btn-u" title="Hacer Pedido" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()" ng-if="usuarioActual.rol != 'admin'"><i class="fa fa-plus"> Hacer Pedido</i></button>
+		            </div>
+		            <div class="col-md-1">
+		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
+		            </div>
+		        </div>     
+		    </div>
+		    <!-- UI-GRID -->
+		    <div ui-grid="gridOptions" class="myGrid" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter></div>	    
+		</div>
+
+
+		<!-- Popup frm -->
+	    <div class="modal fade" id="popupfrm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+	        
+	        <div class="modal-dialog" style="width:90%;">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                    <h4 class="modal-title">{{frmTitulo}}</h4>
+	                </div>
+	                <div class="modal-body">
+	                    
+	                    <div class="reg-block" style="width:100%;">
+
+	                        <!-- form   -->
+	                        <form name="frm" novalidate>
+	                                
+					            <div class="row" ng-if="frmTitulo == 'Hacer Pedido'">
+									
+									<!-- cbo clientes -->
+									<div class="col col-md-12" ng-if="usuarioActual.rol != 'cliente'">										
+		                       			<label class="select">
+		                       				<h5>Seleccione el Cliente:</h5>
+			                                <select style="width: 528px; height:28px;" name="cliente" ng-model="frmData.idCliente" required>
+			                                    <option ng-repeat="cliente in listaClientes" value={{cliente.id}} selected>{{cliente.email}}</option>
+			                   				</select>
+			                                <i style="top:10px; background:none;"></i>
+			                            </label>
+			                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.cliente.$touched">
+					                    	<span ng-show="frm.cliente.$error.required">El campo es obligatorio.</span>
+					                	</div>
+					                </div>
+
+									<!-- cbo locales -->
+									<div class="col col-md-12">										
+		                       			<label class="select">
+		                       				<h5>Seleccione el Local:</h5>
+			                                <select style="width: 528px; height:28px;" name="local" ng-model="frmData.local" ng-change="traerProductosDeLocal(frmData.local)" required>
+			                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
+			                   				</select>
+			                                <i style="top:10px; background:none;"></i>
+			                            </label>
+			                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.local.$touched">
+					                    	<span ng-show="frm.local.$error.required">El campo es obligatorio.</span>
+					                	</div>
+					                </div>
+					            	
+					                <!-- productos -->
+					                <div class="col col-md-12">
+					                    <h5>Seleccione productos:</h5>
+										
+										<table class="table table-bordered">
+						                    <thead>
+						                        <tr>
+						                            <th>Producto</th>
+						                            <th>Precio Unitario</th>
+						                            <th>Cantidad</th>
+						                        </tr>
+						                    </thead>
+						                    <tbody>
+						                        <tr ng-repeat="producto in listaProductos">
+						                            <td>{{producto.descripcion}}</td>
+						                            <td>${{producto.precio}}</td>
+						                            <td><input type="number" name="cantidad" ng-model="producto.cantidad" min="0" max="10" ng-disabled="cantidadDisabled"></td>
+						                            <!-- <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.cantidad.$touched">
+								                    	<span ng-show="frm.cantidad.$valid">El mínimo es 0 y el máximo 10.</span>
+								                	</div> -->
+						                        </tr>
+						                    </tbody>
+						                </table>					                    
+					                </div>
+					            </div>
+					            <div class="row">
+					            	<div class="col col-md-6">
+					            		<button class="btn-u btn-u-primary" ng-hide="btnCarcularTotalHide" ng-click="calculartotal();" >Ver Importe Total</button>
+					            		<button class="btn-u btn-u-primary" ng-show="btnModificarPedidoShow" ng-click="btnCarcularTotalHide = false; btnModificarPedidoShow = false; totalShow = false; cantidadDisabled = false" >Modificar Pedido</button>
+					            	</div>
+					            	<div class="col col-md-6" ng-show="totalShow">
+					            		<h2>Importe Total: ${{frmData.total}}</h2>
+					            	</div>
+					            </div>
+
+	                        </form>
+	                        <!-- fin form -->		                                       
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
+	                    <button ng-if="frmTitulo == 'Editar Pedido'" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemEditado()" ng-disabled="frm.$invalid" data-dismiss="modal">Modificar Pedido</button>
+	                    <button ng-if="frmTitulo == 'Hacer Pedido' && btnModificarPedidoShow == true" type="submit" class="btn-u btn-u-primary" ng-click="guardarItemAgregado()" ng-disabled="frm.$invalid" data-dismiss="modal">Hacer Pedido</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+	    <!-- Popup frmDetallesPedido -->
+	    <div class="modal fade" id="popupFrmDetallesPedido" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+	        
+	        <div class="modal-dialog" style="width:90%;">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                    <h4 class="modal-title">Ver Detalles de Pedido</h4>
+	                </div>
+	                <div class="modal-body">
+	                    
+	                    <div class="reg-block" style="width:100%;">
+
+	                        <!-- form   -->
+	                        <form name="frmDetalles">
+	                                
+					            <div class="row">																		
+									<div class="col col-md-6">	
+										<!-- id pedido-->									
+		                       			<h5>Pedido #: <b>{{frmDetallesPedidoData.idPedido}}</b></h5>
+					                </div>
+																		
+									<div class="col col-md-6">	
+										<!-- fecha -->									
+		                       			<h5>Fecha y Hora: <b>{{frmDetallesPedidoData.fecha}}</b></h5>
+					                </div>
+					            </div>
+					            <hr>
+					            <div class="row">																		
+									<div class="col col-md-6">	
+										<!-- cliente -->
+		                       			<h5>Cliente: <b>{{frmDetallesPedidoData.cliente}}</b></h5>
+										
+										<!-- estado -->
+		                       			<h5>Estado: <b>{{frmDetallesPedidoData.estado}}</b></h5>
+					                </div>
+																		
+									<div class="col col-md-6">	
+										<!-- local -->
+										<h5>Local: <b>{{frmDetallesPedidoData.local}}</b></h5>
+										<!-- importe total -->
+		                       			<h5>Importe Total: <b>${{frmDetallesPedidoData.total}}</b></h5>
+					                </div>
+					            </div>
+
+								<div class="row">					            	
+					                <!-- productos -->
+					                <div class="col col-md-12">
+					                    
+					                    <h5>Productos pedidos:</h5>										
+										<table class="table table-bordered">
+						                    <thead>
+						                        <tr>
+						                            <th>Producto</th>
+						                            <th>Precio Unitario</th>
+						                            <th>Cantidad</th>
+						                        </tr>
+						                    </thead>
+						                    <tbody>
+						                        <tr ng-repeat="producto in frmDetallesPedidoData.productos">
+						                            <td>{{producto.descripcion}}</td>
+						                            <td>${{producto.precio_unitario}}</td>
+						                            <td>{{producto.cantidad}}</td>
+						                        </tr>
+						                    </tbody>
+						                </table>					                    
+					                </div>
+					            </div>
+
+	                        </form>
+	                        <!-- fin form -->		                                       
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Cerrar</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>

@@ -181,7 +181,7 @@ angular.module('miSitio')
       { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
       { field: 'local', name: 'local', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.local}}</div>', width: 150 },
       { field: 'descripcion', name: 'descripcion', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.descripcion}}</div>', width: 150 },
-      { field: 'ingredientes', name: 'ingredientes',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.ingredientes}}</div>', width: 150 },
+      { field: 'ingredientes', name: 'ingredientes',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.ingredientes}}</div>' },
       { field: 'precio', name: 'precio', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.precio}}</div>', width: 180  },
       { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
         cellTemplate: 
