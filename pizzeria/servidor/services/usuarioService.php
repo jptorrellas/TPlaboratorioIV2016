@@ -54,7 +54,7 @@ switch ($objRecibido->accion) {
 			// Si es empleado o encargado trae a que local pertenece
 			$local = null;
 			if ($rolDescripcion->descripcion == 'encargado' || $rolDescripcion->descripcion == 'empleado') {
-				$local = $crud->select("locales.nombre", "usuarios, locales, locales_plantilla", "usuarios.id = locales_plantilla.id_usuario AND locales_plantilla.id_local = locales.id");
+				$local = $crud->select("locales.nombre", "usuarios, locales, locales_plantilla", "usuarios.id = locales_plantilla.id_usuario AND locales_plantilla.id_local = locales.id AND locales_plantilla.id_usuario = '$usuario->id'");
 			}
 
 			// TOKEN

@@ -123,7 +123,6 @@ switch ($objRecibido->accion) {
 			}
 			if ($objRecibido->rolUsuario != 'admin' && $objRecibido->localActual != '') {
 				$idLocal = $crud->select("id", "locales", "nombre = '$objRecibido->localActual'");
-
 				$campos = "locales_productos.*, locales.nombre AS local";
 				$tablas = "locales_productos, locales";
 				$condiciones = "locales_productos.id_local = locales.id AND locales_productos.id_local = '$idLocal->id'";

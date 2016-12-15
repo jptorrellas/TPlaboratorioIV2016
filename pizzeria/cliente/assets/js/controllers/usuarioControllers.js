@@ -155,7 +155,7 @@ angular.module('miSitio')
 
           if (usuarioFactory.payload.rol == "admin") {
             // $state.go('menu.adminGrillaUsuarios');
-            $state.go('menu.grillaUsuarios');
+            $state.go('menu.reportes');
           }
           if (usuarioFactory.payload.rol == "encargado") {
             $state.go('menu.grillaPedidos');

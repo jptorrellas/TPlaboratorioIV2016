@@ -5,8 +5,9 @@ angular.module('miSitio')
   $scope.usuario = usuarioFactory.payload;
   $scope.urlimg = urlFactory.imgProducto;
   $scope.grillaTitulo = 'Lista de Productos';
-  $scope.localActual = usuarioFactory.payload.local;
   $scope.productoActual = '';
+  
+  $scope.localActual = usuarioFactory.payload.local;
 
   $scope.traerCboLocales = function() {
 

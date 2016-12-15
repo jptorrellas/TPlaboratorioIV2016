@@ -37,105 +37,85 @@ $crud = new Crud;
 
 switch ($objRecibido->accion) {
 
-	case 'alta':
+	case 'traerLogins':
+		 
+		$campos = "usuarios.*, logins.fecha as fechaLogin, roles.descripcion as rol";
+		$tablas = "usuarios, logins, roles";
+		$condiciones = "usuarios.id = logins.id AND usuarios.id_rol = roles.id";
+
+		$logins = $crud->selectList($campos, $tablas, $condiciones);
+    	
+    	if ($logins != null && $logins != false) {
+
+    		$respuesta['mensaje'] = 'ok';
+			$respuesta['datos'] = $logins;
+			echo json_encode($respuesta);
+    	}
+    	else {
+    		$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);
+    	}
+		break;
+
+	case 'ventasPorLocal':
+		 
+		$campos = "DISTINCT locales.id as locId, locales.nombre as locNom";
+		$tablas = "locales, pedidos";
+		$condiciones = "locales.id = pedidos.id_local AND pedidos.id_estado = 4";
+
+		$localesConPedidos = $crud->selectList($campos, $tablas, $condiciones);
+    	
+    	if ($localesConPedidos != null && $localesConPedidos != false) {
+
+    		$localesConPedidos = json_decode(json_encode($localesConPedidos));
+
+    		foreach ($localesConPedidos as $localConPedido) {
+				$localConPedido->importeTotal = $crud->select( "SUM(pedidos.importe_total) AS importeTotal", "pedidos", "pedidos.id_local = '$localConPedido->locId' AND pedidos.id_estado = 4");
+			}
+			$localesConPedidos = json_decode(json_encode($localesConPedidos));
+
+    		$respuesta['mensaje'] = 'ok';
+			$respuesta['datos'] = $localesConPedidos;
+			echo json_encode($respuesta);
+    	}
+    	else {
+    		$respuesta['mensaje'] = 'error';
+			echo json_encode($respuesta);
+    	}
+		break;
+
+	case 'ventasPorEmpleado':
+		 
+		$local = $objRecibido->local;
 
 		$idLocal = $crud->select("id", "locales", "nombre = '$objRecibido->local'");
 
-		$producto = $crud->select("*", "locales_productos", "descripcion = '$objRecibido->descripcion' AND id_local = '$idLocal->id'");
-		// Si existe un producto con esa descripción en ese local devuelve error
-		if ($producto != null) {
-			$respuesta['mensaje'] = 'error';
-			echo json_encode($respuesta);
-		}
-		else {
-			
-			// inserta el nuevo local
-			if($crud->insert("locales_productos", "id_local, descripcion, ingredientes, precio", "'$idLocal->id', '$objRecibido->descripcion', '$objRecibido->ingredientes', '$objRecibido->precio'")) {
+		$campos = "usuarios.*";
+		$tablas = "locales_plantilla, usuarios";
+		$condiciones = "locales_plantilla.id_usuario = usuarios.id AND locales_plantilla.id_local = '$idLocal->id'";
 
-				$respuesta['mensaje'] = 'ok';
-				echo json_encode($respuesta);
-			}
-			else {
-
-				$respuesta['mensaje'] = 'error';
-				echo json_encode($respuesta);	
-			}
-		}
-		break;
-
-	case 'cambiaEstado':
+		$empleados = $crud->selectList($campos, $tablas, $condiciones);
     	
-    	$producto = $crud->select("*", "locales_productos", "id = '$objRecibido->idProducto'");
+    	if ($empleados != null && $empleados != false) {
 
-		if ($producto != false && $producto != null) {
+    		$empleados = json_decode(json_encode($empleados));
 
-			if ($producto->estado == 1) {
-				$producto->estado = 0;
+    		// trae pedidos de cada empleado
+    		foreach ($empleados as $empleado) {
+				$empleado->pedidos = $crud->selectList( "pedidos_plantilla.id_pedido", "pedidos_plantilla", "pedidos_plantilla.id_usuario = '$empleado->id'");
 			}
-			else {
-				$producto->estado = 1;
+			$empleados = json_decode(json_encode($empleados));
+
+			// trae importe total de pedidos de cada empleado
+			foreach ($empleados as $empleado) {
+				foreach ($empleado->pedidos as $empleadoPedido) {
+					$empleadoPedido->importe = $crud->select( "pedidos.importe_total AS total", "pedidos", "pedidos.id = '$empleadoPedido->id_pedido' AND pedidos.id_estado = 4");
+				}
 			}
-
-	    	if ($crud->update("locales_productos", "estado = '$producto->estado'", "id = '$objRecibido->idProducto'")) {
-	    		$respuesta['mensaje'] = 'ok';
-				echo json_encode($respuesta);
-	    	}
-	    	else {
-	    		$respuesta['mensaje'] = 'error';
-				echo json_encode($respuesta);
-	    	}
-	    }
-	    else {
-	    	$respuesta['mensaje'] = 'error';
-			echo json_encode($respuesta);
-	    }
-
-    	break;
-
-	case 'modificacion':
-	
-		$producto = $crud->select("*", "locales_productos", "id = '$objRecibido->id'");
-		// Si no existe el elemento o esta en estado 0
-		if ($producto == null || $producto == false || $producto == '') {
-			$respuesta['mensaje'] = 'error. no existe el producto';
-			echo json_encode($respuesta);
-		}
-		else {
-
-			// Actualiza 
-			$crud->update("locales_productos", "descripcion = '$objRecibido->descripcion', ingredientes = '$objRecibido->ingredientes', precio = '$objRecibido->precio'", "id = '$objRecibido->id'");
-
-			$respuesta['mensaje'] = 'ok';
-			echo json_encode($respuesta);
-			
-		}
-		break;	
-
-	case 'listado':
-		
-		// Para la grilla de productos
-		if ($objRecibido->filtro == "grilla") {
-		 
-			if ($objRecibido->rolUsuario == 'admin') {
-				$campos = "locales_productos.*, locales.nombre AS local";
-				$tablas = "locales_productos, locales";
-				$condiciones = "locales_productos.id_local = locales.id";
-			}
-			if ($objRecibido->rolUsuario != 'admin' && $objRecibido->localActual != '') {
-				$idLocal = $crud->select("id", "locales", "nombre = '$objRecibido->localActual'");
-
-				$campos = "locales_productos.*, locales.nombre AS local";
-				$tablas = "locales_productos, locales";
-				$condiciones = "locales_productos.id_local = locales.id AND locales_productos.id_local = '$idLocal->id'";
-			}
-		}
-
-		$listaElementos = $crud->selectList($campos, $tablas, $condiciones);
-    	
-    	if ($listaElementos != null && $listaElementos != false) {
-
+			$empleados = json_decode(json_encode($empleados));
+				
     		$respuesta['mensaje'] = 'ok';
-			$respuesta['datos'] = $listaElementos;
+			$respuesta['datos'] = $empleados;
 			echo json_encode($respuesta);
     	}
     	else {
@@ -144,114 +124,25 @@ switch ($objRecibido->accion) {
     	}
 		break;
 
-	case 'listadoFotos':
-		
-		$listaElementos = $crud->selectList("*", "productos_fotos", "id_producto = '$objRecibido->idProducto'");
-		if ($listaElementos != false && $listaElementos != null) {
-    		
-    		$respuesta['mensaje'] = 'ok';
-			$respuesta['datos'] = $listaElementos;
-			echo json_encode($respuesta);
-    	}
-    	else {
-    		$respuesta['mensaje'] = 'error';
-			echo json_encode($respuesta);	
-		}	
-		break;
+	case 'comprasPorCliente':
 
-	case 'cambiaEstadoFoto':
+		$campos = "usuarios.*";
+		$tablas = "usuarios, pedidos";
+		$condiciones = "usuarios.id = pedidos.id_cliente AND pedidos.id_estado != 5";
+
+		$clientes = $crud->selectList($campos, $tablas, $condiciones);
     	
-    	$foto = $crud->select("*", "productos_fotos", "id = '$objRecibido->idFoto'");
+    	if ($clientes != null && $clientes != false) {
 
-		if ($foto != false && $foto != null) {
+    		$clientes = json_decode(json_encode($clientes));
 
-			if ($foto->estado == 1) {
-				$foto->estado = 0;
+    		foreach ($clientes as $cliente) {
+				$cliente->importeTotal = $crud->select( "SUM(pedidos.importe_total) AS importeTotal", "pedidos", "pedidos.id_cliente = '$cliente->id' AND pedidos.id_estado != 5");
 			}
-			else {
-				$foto->estado = 1;
-			}
-
-	    	if ($crud->update("productos_fotos", "estado = '$foto->estado'", "id = '$objRecibido->idFoto'")) {
-	    		$respuesta['mensaje'] = 'ok';
-				echo json_encode($respuesta);
-	    	}
-	    	else {
-	    		$respuesta['mensaje'] = 'error';
-				echo json_encode($respuesta);
-	    	}
-	    }
-	    else {
-	    	$respuesta['mensaje'] = 'error';
-			echo json_encode($respuesta);
-	    }
-
-    	break;
-
-    case 'altaFotos':
-
-    	if (isset($objRecibido->fotos) && $objRecibido->fotos != null && count($objRecibido->fotos) > 0) {
-					
-			ini_set('date.timezone','America/Buenos_Aires'); 
-			$fechaActual = date("Y-m-d_H-i-s");
-
-			for ($i=0; $i < count($objRecibido->fotos); $i++) { 
-				// Obtiene extension del archivo a subir
-				$extension = explode("/", $objRecibido->fotos[$i]->filetype);
-				$extension = $extension[1];
-				$Base64Img = base64_decode($objRecibido->fotos[$i]->base64);
-			
-				$nombreFoto = $objRecibido->idProducto.'-'.$fechaActual.'-'.$i.'.'.$extension;
-				$archivoImagen = '../img/productos/'.$nombreFoto;
-			
-				file_put_contents($archivoImagen, $Base64Img);
-
-				// inserta nombre de foto subida
-				$crud->insert("productos_fotos", "id_producto, foto", "'$objRecibido->idProducto', '$nombreFoto'");
-			}
-
-			$respuesta['mensaje'] = 'ok';
-			echo json_encode($respuesta);
-		}
-		else {
-			
-			$respuesta['mensaje'] = 'error';
-			echo json_encode($respuesta);
-			
-		}
-		
-		break;
-
-	case 'traerTodo':
-		
-		$campos = "locales.id AS locId, locales.nombre AS locNom, locales.direccion AS locDir, locales.tel AS locTel, locales.latitud AS locLat, locales.longitud AS locLong";
-		$tablas = "locales";
-		$condiciones = "locales.estado = 1";
-
-
-		// trae locales
-		$listaLocales = $crud->selectList($campos, $tablas, $condiciones);
-
-
-		// agrega fotos y productos de local a cada local que trajo
-		$listaLocales = json_decode(json_encode($listaLocales));
-		foreach ($listaLocales as $local) {
-			$local->fotos = $crud->selectList("locales_fotos.foto", "locales_fotos", "locales_fotos.id_local = '$local->locId' AND locales_fotos.estado = 1");
-			$local->productos = $crud->selectList("locales_productos.id AS prodId, locales_productos.descripcion AS prodDesc, locales_productos.ingredientes AS prodIng, locales_productos.precio AS prodPrecio", "locales_productos", "locales_productos.id_local = '$local->locId' AND locales_productos.estado = 1");
-		}
-
-		// agrega fotos a productos
-		$listaLocales = json_decode(json_encode($listaLocales));
-		foreach ($listaLocales as $local) {
-			foreach ($local->productos as $producto) {
-				$producto->fotos = $crud->selectList("productos_fotos.foto", "productos_fotos", "productos_fotos.id_producto = '$producto->prodId' AND productos_fotos.estado = 1");
-			}
-		}
-
-    	if ($listaLocales != null && $listaLocales != false) {
-
+			$clientes = json_decode(json_encode($clientes));
+				
     		$respuesta['mensaje'] = 'ok';
-			$respuesta['datos'] = $listaLocales;
+			$respuesta['datos'] = $clientes;
 			echo json_encode($respuesta);
     	}
     	else {

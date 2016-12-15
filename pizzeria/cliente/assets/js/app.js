@@ -1,5 +1,5 @@
 
-var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngMap', 'ngImgCrop', 'naif.base64', 'ui.bootstrap']);
+var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngMap', 'ngImgCrop', 'naif.base64', 'ui.bootstrap', 'chart.js']);
 
 
 app.run(function($http) {
