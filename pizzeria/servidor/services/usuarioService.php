@@ -42,8 +42,12 @@ switch ($objRecibido->accion) {
 		$usuario = $crud->select("*", "usuarios", "email = '$objRecibido->email' && password = '$objRecibido->password' && estado = 1");
 
 		if ($usuario != false && $usuario != null) {
+
+			ini_set('date.timezone','America/Buenos_Aires'); 
+			$fechaActual = date("Y-m-d_H-i-s");
+
 			// Guarda el registro del login
-			// $crud->insert("registro_logins", "id_usuario, dispositivo_usuario", "'$usuario->id', '$objRecibido->dispositivo'");
+			$crud->insert("logins", "id_usuario, fecha", "'$usuario->id', '$fechaActual'");
 			// Trae la descripción del rol
 			$rolDescripcion = $crud->select("descripcion", "roles", "id = '$usuario->id_rol'");
 

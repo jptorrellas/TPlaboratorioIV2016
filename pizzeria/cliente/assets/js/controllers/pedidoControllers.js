@@ -55,12 +55,6 @@ angular.module('miSitio')
             $scope.listaProductosRecibida[i].cantidad = 0;
           }
           $scope.listaProductos = $scope.listaProductosRecibida;
-          // if ($scope.frmTitulo == 'Editar Pedido') { 
-          //   $scope.frmData.local = $scope.localActual;
-          // }
-          // if ($scope.frmTitulo == 'Hacer Pedido') { 
-          //   $scope.frmData.local = $scope.listaLocales[0].nombre;
-          // }
         }
         else {
           growl.error(respuesta.mensaje, {ttl: 3000}); 
@@ -81,13 +75,6 @@ angular.module('miSitio')
       function(respuesta) { 
         if (respuesta.estado == true) {
           $scope.listaClientes = respuesta.datos;
-
-          // if ($scope.frmTitulo == 'Editar Pedido') { 
-          //   $scope.frmData.local = $scope.localActual;
-          // }
-          // if ($scope.frmTitulo == 'Hacer Pedido') { 
-          //   $scope.frmData.local = $scope.listaLocales[0].nombre;
-          // }
         }
         else {
           growl.error(respuesta.mensaje, {ttl: 3000}); 
@@ -134,7 +121,6 @@ angular.module('miSitio')
   $scope.calculartotal = function() {
 
     $scope.frmData.total = 0;
-    console.log('entro');
 
     for (var i = $scope.listaProductos.length - 1; i >= 0; i--) {
       if (($scope.listaProductos[i].cantidad != '' && $scope.listaProductos[i].cantidad != null && $scope.listaProductos[i].cantidad != undefined && $scope.listaProductos[i].cantidad != 0) ) {
@@ -185,8 +171,6 @@ angular.module('miSitio')
       estado: item.estado,
       productos: item.productos
     };
-
-    console.log("item", item);
   };
 
   $scope.agregarItem = function() {
@@ -206,7 +190,7 @@ angular.module('miSitio')
     {
       idCliente: '',
       idEmpleado: $scope.idEmpleadoActual,
-      local: $scope.listaLocales[0].nombre,
+      local: '',
       total: 0,
       productos: [],     
       accion: 'alta'
@@ -288,18 +272,19 @@ angular.module('miSitio')
     
     return [       
       { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
-      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.local}}</div>', width: 150 },
-      { field: 'cliente', name: 'cliente', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.cliente}}</div>', width: 150 },
-      { field: 'fecha', name: 'fecha',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.fecha}}</div>', width: 150 },
-      { field: 'importe_total', name: 'importe total', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.importe_total}}</div>', width: 180  },
+      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.local}}</div>', headerCellClass: 'center' },
+      { field: 'cliente', name: 'cliente', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.cliente}}</div>', headerCellClass: 'center' },
+      { field: 'fecha', name: 'fecha',  cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.fecha}}</div>', headerCellClass: 'center' },
+      { field: 'importe_total', name: 'importe total', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>${{row.entity.importe_total}}</div>', headerCellClass: 'center' },
       { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', //cellTemplate: '<div>{{row.entity.estado}}</div>',
         cellTemplate: 
-        '<div>\
+        '<div ng-if="grid.appScope.usuario.rol == \'admin\' || grid.appScope.usuario.rol == \'encargado\'" >\
           <select style="height:25px; width: 140px; padding-left: 5px;" ng-model="row.entity.estado" ng-change="grid.appScope.cambiaEstadoItem({{row.entity.id}}, row.entity.estado)">\
             <option ng-repeat="estado in grid.appScope.listaPedidosEstados" ng-value="{{estado.descripcion}}" >{{estado.descripcion}}</option>\
           </select>\
-        </div>', 
-        width: 180,
+        </div>\
+        <div ng-if="grid.appScope.usuario.rol == \'empleado\' || grid.appScope.usuario.rol == \'cliente\'">{{row.entity.estado}}</div>', 
+        width: 180, headerCellClass: 'center',
         filter: { type: uiGridConstants.filter.SELECT,
           selectOptions: [
             {value: 'pendiente', label: 'pendiente'},
@@ -326,14 +311,14 @@ angular.module('miSitio')
   var posEstado = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('estado');
   var posDetalles = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('detalles');
   
-  if ($scope.usuario.rol != 'cliente') {
-    $scope.gridOptions.columnDefs[posEstado].visible = true;
-    $scope.gridOptions.columnDefs[posDetalles].visible = true;
-  }
-  else {
-    $scope.gridOptions.columnDefs[posEstado].visible = false;
-    $scope.gridOptions.columnDefs[posDetalles].visible = false;
-  }
+  // if ($scope.usuario.rol != 'cliente') {
+  //   $scope.gridOptions.columnDefs[posEstado].visible = true;
+  //   $scope.gridOptions.columnDefs[posDetalles].visible = true;
+  // }
+  // else {
+  //   $scope.gridOptions.columnDefs[posEstado].visible = false;
+  //   $scope.gridOptions.columnDefs[posDetalles].visible = false;
+  // }
 
 });
 

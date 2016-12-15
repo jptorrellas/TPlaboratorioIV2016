@@ -111,16 +111,16 @@
 		                    			<div class="col col-md-6" ng-if="frmTitulo == 'Agregar Usuario'">
 			                    			<label class="select">
 				                                <select style="width: 249px; height:28px;" ng-model="frmData.rol" ng-change="traerCboLocales()">
-				                                	<option ng-if="usuarioActual.rol == 'admin'" value="admin">Administrador</option>
-				                                    <option ng-if="usuarioActual.rol == 'admin'" value="encargado">Encargado</option>
-				                                    <option ng-if="usuarioActual.rol == 'admin'" value="empleado">Empleado</option>
+				                                	<option ng-if="usuario.rol == 'admin'" value="admin">Administrador</option>
+				                                    <option ng-if="usuario.rol == 'admin'" value="encargado">Encargado</option>
+				                                    <option ng-if="usuario.rol == 'admin' || usuario.rol == 'encargado'" value="empleado">Empleado</option>
 				                                    <option value="cliente">Cliente</option>
 				                                </select>
 				                                <i style="top:10px; background:none;"></i>
 				                            </label>
 				                        </div>
 				                        <div class="col col-md-6" ng-if="frmTitulo == 'Agregar Usuario'">
-			                    			<label class="select" ng-if="usuarioActual.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
+			                    			<label class="select" ng-if="usuario.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
 				                                <select style="width: 249px; height:28px;" name="local" ng-model="frmData.local" required>
 				                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
 				                   				</select>
@@ -131,18 +131,31 @@
 						                	</div>
 				                        </div>
 
+										<!-- para que un encargado haga alta de empleado de su sucursal -->
+				                        <div class="col col-md-6" ng-if="frmTitulo == 'Agregar Usuario'">
+			                    			<label class="select" ng-if="usuario.rol == 'encargado' && frmData.rol == 'empleado'">
+				                                <select style="width: 249px; height:28px;" name="local" ng-model="frmData.local" required>
+				                                    <option value={{usuario.local}}>{{usuario.local}}</option>
+				                   				</select>
+				                                <i style="top:10px; background:none;"></i>
+				                            </label>
+				                            <div class="messages" style="margin-top:5px;" ng-show="frm.$submitted || frm.local.$touched">
+						                    	<span ng-show="frm.local.$error.required">El campo es obligatorio.</span>
+						                	</div>
+				                        </div>
+
 				                        <!-- si es edicion de usuario -->
 				                        <div class="col col-md-6" ng-if="frmTitulo == 'Editar Usuario'">
-			                    			<label class="select" ng-if="(rolUsuarioAeditar != 'cliente' && rolUsuarioAeditar != 'admin') && (usuarioActual.rol == 'admin')">
+			                    			<label class="select" ng-if="(rolUsuarioAeditar != 'cliente' && rolUsuarioAeditar != 'admin') && (usuario.rol == 'admin')">
 				                                <select style="width: 249px; height:28px;" ng-model="frmData.rol" ng-change="traerCboLocales()">
-				                                    <option ng-if="usuarioActual.rol == 'admin' && rolUsuarioAeditar == 'encargado'" value="encargado">Encargado</option>
-				                                    <option ng-if="usuarioActual.rol == 'admin' && rolUsuarioAeditar == 'empleado'" value="empleado">Empleado</option>
+				                                    <option ng-if="usuario.rol == 'admin' && rolUsuarioAeditar == 'encargado'" value="encargado">Encargado</option>
+				                                    <option ng-if="usuario.rol == 'admin' && rolUsuarioAeditar == 'empleado'" value="empleado">Empleado</option>
 				                                </select>
 				                                <i style="top:10px; background:none;"></i>
 				                            </label>
 				                        </div>
 				                        <div class="col col-md-6"  ng-if="frmTitulo == 'Editar Usuario'">
-			                    			<label class="select" ng-if="usuarioActual.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
+			                    			<label class="select" ng-if="usuario.rol == 'admin' && (frmData.rol == 'encargado' || frmData.rol == 'empleado')">
 				                                <select style="width: 249px; height:28px;" name="local" ng-model="frmData.local" required>
 				                                    <option ng-repeat="local in listaLocales" value={{local.nombre}}>{{local.nombre}}</option>
 				                   				</select>

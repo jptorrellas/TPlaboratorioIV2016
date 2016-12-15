@@ -1,0 +1,128 @@
+ <div class="container" style="width:100%; height:100%;"> <!-- background-image:url('assets/img/bg/bg-argenta.jpg'); -->    
+
+    <div class="panel panel-u" style="margin-top: 30px;">              
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-tasks"></i>NUESTROS LOCALES:</h3>
+        </div>
+        <div class="panel-body">                       
+            <!-- ngrepeat locales -->
+            <div ng-repeat="local in locales">
+                <div class="panel panel-u">                   
+                    <div class="panel-body">
+                        <!-- datos local -->
+                        <div class="row margin-bottom-30" style="padding-right:15px;">
+                            <div class="col-md-2">
+                                <div class="">
+                                    <div style="position:relative;">
+                                        <div class="slides_control">
+                                            <carousel interval="myInterval">
+                                                <slide ng-repeat="foto in local.fotos" active="slide.active">
+                                                    <img ng-src="{{urlImgLocal}}{{foto.foto}}">
+                                                </slide>
+                                            </carousel>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10" style="padding-left:0px; background-color:#f5ffec;">
+                                <div style="height:250px; padding:0px 25 25px 25px;">
+                                    <div>
+                                        <h1 style="color:#72c02c;">{{local.locNom}}</h1>
+                                    </div>
+                                    <div style="padding-top: 40px; line-height:8;">
+                                        <h4><i class="fa fa-map-marker"> {{local.locDir}}</i></h4>
+                                    <h4><i class="fa fa-phone"> {{local.locTel}}</i></h4>
+                                    <h4><i class="fa fa-clock-o"> Lunes a Domingo: 10:00hs a 1:00hs</i></h4>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- productos local -->
+                        <div class="row margin-bottom-30" style="margin:1px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Productos</th>
+                                        <th>Ingredientes</th>
+                                        <th class="center">Fotos</th>
+                                        <th class="center">Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="producto in local.productos">
+                                        <td>{{producto.prodDesc}}</td>
+                                        <td>{{producto.prodIng}}</td>
+                                        <td class="center" style="width: 100px;">
+                                            <div style="position:relative;">
+                                                <div class="slides_control_prod">
+                                                    <carousel interval="myInterval">
+                                                        <slide ng-repeat="foto in producto.fotos" active="slide.active">
+                                                            <img ng-src="{{urlImgProducto}}{{foto.foto}}">
+                                                        </slide>
+                                                    </carousel>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="center">${{producto.prodPrecio}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-u" style="margin-top: 30px;">              
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-tasks"></i>COMO LLEGAR:</h3>
+        </div>
+        <div class="panel-body">
+            
+            <div class="row" style="padding:50px">
+
+                <div class="row">
+                    <div class="col col-md-6">     
+                        <h4>
+                            Escriba la dirección en donde se encuentra y haga click sobre el ícono de la sucursal Argenta destino.
+                        </h4>               
+                        <!-- direccion -->
+                        <div class="input-group margin-bottom-20">
+                            <span class="input-group-addon"><i class="fa fa-map"></i></span>
+                            <input name="origen" type="text" class="form-control" placeholder="Dirección" ng-model="origen" required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-md-6">
+                        <!-- mapa -->
+                        <ng-map zoom="11" center="caba" style="width:100%; height:400px"  on-load="onLoad()">
+                            <marker position="{{frmData.direccion}}" title="{{frmData.direccion}}" ></marker>                         
+                            <directions
+                                draggable="true"
+                                panel="directions-panel"
+                                travel-mode="DRIVING"
+                                origin={{origen}}
+                                destination={{destino}}>
+                            </directions>                           
+                            <div ng-repeat="local in locales">
+                                <marker icon="{{argentaIcon}}" position ="[{{local.locLat}}, {{local.locLong}}]" title="{{local.locNom}} - {{local.locDir}}" animation="Animation.DROP" on-click="getpos($event)"></marker>
+                            </div>
+                        </ng-map>
+                    </div>
+                    <div class="col col-md-6">
+                        <div>
+                            <h3>Indicaciones:</h3>
+                        </div>
+                        <div id="directions-panel" style="float:left;  overflow: auto; padding: 0px 5px">  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

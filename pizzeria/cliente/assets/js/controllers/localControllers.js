@@ -155,10 +155,10 @@ angular.module('miSitio')
     
     return [       
       { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
-      { field: 'nombre', name: 'nombre', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.nombre}}</div>', width: 150 },
-      { field: 'direccion', name: 'direccion',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.direccion}}</div>', width: 150 },
-      { field: 'tel', name: 'teléfono', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.tel}}</div>', width: 180  },
-      { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
+      { field: 'nombre', name: 'nombre', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.nombre}}</div>', headerCellClass: 'center' },
+      { field: 'direccion', name: 'direccion',  cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.direccion}}</div>', headerCellClass: 'center' },
+      { field: 'tel', name: 'teléfono', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.tel}}</div>', headerCellClass: 'center' },
+      { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', headerCellClass: 'center',
         cellTemplate: 
         '<div>\
           <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
@@ -196,8 +196,13 @@ angular.module('miSitio')
   var posDatos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('datos');
   var posFotos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('fotos');
   
-  if ($scope.usuario.rol == 'admin') {
-    $scope.gridOptions.columnDefs[posEstado].visible = true;
+  if ($scope.usuario.rol == 'admin' || $scope.usuario.rol == 'encargado') {
+    if ($scope.usuario.rol == 'admin') {
+      $scope.gridOptions.columnDefs[posEstado].visible = true;
+    }
+    else {
+      $scope.gridOptions.columnDefs[posEstado].visible = false;
+    }
     $scope.gridOptions.columnDefs[posDatos].visible = true;
     $scope.gridOptions.columnDefs[posFotos].visible = true;
   }
@@ -230,7 +235,7 @@ angular.module('miSitio')
     $scope.frmData.longitud = String(event.latLng.lng());
   };
 
-  $scope.direccion = 'capital federal';
+  $scope.direccion = 'caba';
   $scope.onLoad = function() {
     NgMap.getMap().then(function (map) {
         //console.log(map.getBounds().toString());

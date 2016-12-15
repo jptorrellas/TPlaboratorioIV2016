@@ -71,7 +71,7 @@ angular.module('miSitio')
 
   $scope.editarItem = function(item) {
 
-    console.log(item);
+    // console.log(item);
     $scope.frmTitulo = 'Editar Producto';
     
     $scope.frmData =
@@ -179,16 +179,16 @@ angular.module('miSitio')
     
     return [       
       { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
-      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.local}}</div>', width: 150 },
-      { field: 'descripcion', name: 'descripcion', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.descripcion}}</div>', width: 150 },
-      { field: 'ingredientes', name: 'ingredientes',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.ingredientes}}</div>' },
-      { field: 'precio', name: 'precio', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.precio}}</div>', width: 180  },
+      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.local}}</div>', headerCellClass: 'center' },
+      { field: 'descripcion', name: 'descripcion', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.descripcion}}</div>', headerCellClass: 'center' },
+      { field: 'ingredientes', name: 'ingredientes',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.ingredientes}}</div>', headerCellClass: 'center' },
+      { field: 'precio', name: 'precio', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>${{row.entity.precio}}</div>', headerCellClass: 'center'  },
       { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
         cellTemplate: 
         '<div>\
           <input type="checkbox" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
         </div>', 
-        width: 140,
+        width: 140, headerCellClass: 'center',
         filter: { type: uiGridConstants.filter.SELECT,
           selectOptions: [
             {value: '1', label: 'activo'},
@@ -221,7 +221,7 @@ angular.module('miSitio')
   var posDatos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('datos');
   var posFotos = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('fotos');
   
-  if ($scope.usuario.rol == 'admin') {
+  if ($scope.usuario.rol == 'admin' || $scope.usuario.rol == 'encargado') {
     $scope.gridOptions.columnDefs[posEstado].visible = true;
     $scope.gridOptions.columnDefs[posDatos].visible = true;
     $scope.gridOptions.columnDefs[posFotos].visible = true;
@@ -338,9 +338,6 @@ angular.module('miSitio')
       }
     ];
   };
-
-
-
 });
 
 

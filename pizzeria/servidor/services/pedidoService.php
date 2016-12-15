@@ -131,7 +131,7 @@ switch ($objRecibido->accion) {
 
 				$campos = "pedidos.*, usuarios.email AS cliente, locales.nombre AS local, pedidos_estados.descripcion AS estado";
 				$tablas = "pedidos, usuarios, locales, pedidos_estados";
-				$condiciones = "pedidos.id_cliente = 'objRecibido->idCliente' AND pedidos.id_local = locales.id AND pedidos.id_cliente = usuarios.id AND pedidos.id_estado = pedidos_estados.id";
+				$condiciones = "pedidos.id_cliente = '$objRecibido->idUsuario' AND pedidos.id_local = locales.id AND pedidos.id_cliente = usuarios.id AND pedidos.id_estado = pedidos_estados.id";
 			}
 		}
 

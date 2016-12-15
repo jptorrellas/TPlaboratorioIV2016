@@ -154,16 +154,17 @@ angular.module('miSitio')
           growl.info("Bienvenido " + usuarioFactory.payload.nombre + "!", {ttl: 2000});
 
           if (usuarioFactory.payload.rol == "admin") {
-            $state.go('menu.adminGrillaUsuarios');
+            // $state.go('menu.adminGrillaUsuarios');
+            $state.go('menu.grillaUsuarios');
           }
           if (usuarioFactory.payload.rol == "encargado") {
-            $state.go('menu.encargadoGrillaUsuarios');
+            $state.go('menu.grillaPedidos');
           }
           if (usuarioFactory.payload.rol == "empleado") {
-            $state.go('menu.empleadoGrillaUsuarios');
+            $state.go('menu.grillaPedidos');
           }
           if (usuarioFactory.payload.rol == "cliente") {
-            $state.go('menu.clienteGrillaUsuarios');
+            $state.go('menu.portada');
           }
         }
         else {
@@ -301,7 +302,6 @@ angular.module('miSitio')
   $scope.grillaTitulo = 'Lista de Usuarios';
 
   $scope.listaLocales = [];
-
   
   $scope.traerCboLocales = function() {
 
@@ -486,7 +486,7 @@ angular.module('miSitio')
       password1: '123',
       password2: '123',
       rol: 'cliente',
-      local: $scope.listaLocales[0].nombre,
+      local: '',
       foto: urlFactory.imgPerfilUsuario + 'defaultPerfil.jpeg',
       accion: 'alta'
     };
@@ -597,13 +597,13 @@ angular.module('miSitio')
   function columnDefs () {
     
     return [       
-      { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50 },
-      { field: 'foto', name: 'foto', headerCellClass: 'center', cellTemplate:'<div class="ui-grid-cell-contents" style="width:100%; height: 100%; text-align:center;"><img style="width:50px; height:50px; border-radius:50%;" ng-src="{{grid.appScope.urlimg}}{{row.entity.foto}}"></div>', width: 80, enableFiltering: false, enableColumnMenu: false },
-      { field: 'nombre', name: 'nombre', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.nombre}}</div>', width: 150 },
-      { field: 'apellido', name: 'apellido',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.apellido}}</div>', width: 150 },
-      { field: 'email', name: 'email',  cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.email}}</div>', width: 180 },
-      { field: 'tel', name: 'telefono', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.tel}}</div>', width: 180  },
-      { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.rol}}</div>', width: 160,
+      { field: 'id', name: '#', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.id}}</div>', width: 50, headerCellClass: 'center' },
+      { field: 'foto', name: 'foto', headerCellClass: 'center', cellTemplate:'<div class="ui-grid-cell-contents" style="width:100%; height: 100%; text-align:center;"><img style="width:50px; height:50px; border-radius:50%;" ng-src="{{grid.appScope.urlimg}}{{row.entity.foto}}"></div>', width: 80, enableFiltering: false, enableColumnMenu: false, headerCellClass: 'center' },
+      { field: 'nombre', name: 'nombre', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.nombre}}</div>', headerCellClass: 'center' },
+      { field: 'apellido', name: 'apellido',  cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.apellido}}</div>', headerCellClass: 'center' },
+      { field: 'email', name: 'email',  cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.email}}</div>', headerCellClass: 'center' },
+      { field: 'tel', name: 'telefono', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.tel}}</div>', headerCellClass: 'center' },
+      { field: 'rol', name: 'rol', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.rol}}</div>', headerCellClass: 'center',
         filter: { type: uiGridConstants.filter.SELECT,
           selectOptions: [
             {value: 'admin', label: 'administrador'},
@@ -614,13 +614,14 @@ angular.module('miSitio')
         },
         cellFilter: 'rol'
       },
-      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical', cellTemplate: '<div>{{row.entity.local}}</div>', width: 180  },
-      { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', 
+      { field: 'local', name: 'local', cellClass: 'ui-grid-vertical-center', cellTemplate: '<div>{{row.entity.local}}</div>', headerCellClass: 'center'  },
+      { field: 'estado', name: 'estado', cellClass: 'ui-grid-vertical-center', headerCellClass: 'center',
         cellTemplate: 
         '<div>\
-          <input type="checkbox" ng-if="grid.appScope.usuario.rol == \'admin\' || (grid.appScope.usuario.rol == \'encargado\'  && row.entity.rol == \'empleado\' ) " ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
+          <input type="checkbox" ng-if="grid.appScope.usuario.rol == \'admin\' || grid.appScope.usuario.rol == \'encargado\'" ng-checked="{{row.entity.estado}}" ng-click="grid.appScope.cambiaEstadoItem(row.entity.id)">\
         </div>', 
         width: 110,
+        //(grid.appScope.usuario.rol == \'encargado\'  && row.entity.rol == \'empleado\' ) 
         filter: { type: uiGridConstants.filter.SELECT,
           selectOptions: [
             {value: '1', label: 'activo'},
@@ -643,6 +644,7 @@ angular.module('miSitio')
   // Oculta columnas según rol usuario
   var posEstado = $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('estado');
   var posLocal= $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('local');
+  var posDatos= $scope.gridOptions.columnDefs.map(function (e) { return e.field; }).indexOf('datos');
   
   if ($scope.usuario.rol == 'admin') {
     $scope.gridOptions.columnDefs[posEstado].visible = true;
@@ -657,10 +659,8 @@ angular.module('miSitio')
   }
   else {
     $scope.gridOptions.columnDefs[posEstado].visible = false;
-  }
-  if ($scope.usuario.rol == 'empleado' ) {
     $scope.gridOptions.columnDefs[posLocal].visible = false;
-    return;
+    $scope.gridOptions.columnDefs[posDatos].visible = false;
   }
 });
 

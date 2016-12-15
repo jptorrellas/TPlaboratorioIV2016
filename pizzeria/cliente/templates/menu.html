@@ -46,7 +46,7 @@
                     <a ng-href="#/menu/grillaUsuarios">USUARIOS</a>
                 </li>
             </ul>
-            <ul ng-if="usuarioActual.rol != 'cliente'" class="nav navbar-nav">
+            <ul ng-if="usuarioActual.rol != 'cliente' && usuarioActual.rol != 'empleado'" class="nav navbar-nav">
                 <li class="page-scroll">
                     <a ng-href="#/menu/grillaLocales">LOCALES</a>
                 </li>
@@ -61,9 +61,18 @@
                     <a ng-href="#/menu/grillaPedidos">PEDIDOS</a>
                 </li>
             </ul>
+            <ul class="nav navbar-nav" ng-if="usuarioActual.rol == 'cliente'">
+                <li class="page-scroll">
+                    <a ng-href="#/menu/portada">PORTADA</a>
+                </li>
+            </ul>
 
-
-            
+            <ul class="nav navbar-nav" ng-if="usuarioActual.rol == 'admin'">
+                <li class="page-scroll">
+                    <a ng-href="#/menu/reportes">REPORTES</a>
+                </li>
+            </ul>
+    
 
             <!-- <ul class="nav navbar-nav">
                 <li class="dropdown">

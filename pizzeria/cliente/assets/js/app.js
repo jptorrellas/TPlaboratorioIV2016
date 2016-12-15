@@ -1,5 +1,5 @@
 
-var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngMap', 'ngImgCrop', 'naif.base64']);
+var app = angular.module('miSitio', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.exporter', 'satellizer', 'angular-growl', 'ngMap', 'ngImgCrop', 'naif.base64', 'ui.bootstrap']);
 
 
 app.run(function($http) {
@@ -53,8 +53,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			controller: 'MenuCtrl'
 		})
 
-		//ADMIN
-		.state('menu.adminGrillaUsuarios', {
+		.state('menu.grillaUsuarios', {
 			cache: false,
 			url: '/grillaUsuarios',
 			views: {
@@ -65,7 +64,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		.state('menu.adminGrillaLocales', {
+		.state('menu.grillaLocales', {
 			cache: false,
 			url: '/grillaLocales',
 			views: {
@@ -76,7 +75,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		.state('menu.adminGrillaProductos', {
+		.state('menu.grillaProductos', {
 			cache: false,
 			url: '/grillaProductos',
 			views: {
@@ -87,7 +86,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		.state('menu.adminGrillaPedidos', {
+		.state('menu.grillaPedidos', {
 			cache: false,
 			url: '/grillaPedidos',
 			views: {
@@ -98,51 +97,31 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider)
 			}
 		})
 
-		//ENCARGADO
-		.state('menu.encargadoGrillaUsuarios', {
+		.state('menu.portada', {
 			cache: false,
-			url: '/grillaUsuarios',
+			url: '/portada',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaUsuarios.html',
-			    controller: 'GrillaUsuariosCtrl'
+			    templateUrl: 'templates/portada.html',
+			    controller: 'PortadaCtrl'
 			  }
 			}
 		})
 
-		.state('menu.encargadoGrillaLocales', {
+		.state('menu.reportes', {
 			cache: false,
-			url: '/grillaLocales',
+			url: '/reportes',
 			views: {
 			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaLocales.html',
-			    controller: 'GrillaLocalesCtrl'
+			    templateUrl: 'templates/reportes.html',
+			    controller: 'ReportesCtrl'
 			  }
 			}
 		})
 
-		//EMPLEADO
-		.state('menu.empleadoGrillaUsuarios', {
-			cache: false,
-			url: '/grillaUsuarios',
-			views: {
-			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaUsuarios.html',
-			    controller: 'GrillaUsuariosCtrl'
-			  }
-			}
-		})
 
-		.state('menu.empleadoGrillaLocales', {
-			cache: false,
-			url: '/grillaLocales',
-			views: {
-			  'contenido': {
-			    templateUrl: 'templates/grillas/grillaLocales.html',
-			    controller: 'GrillaLocalesCtrl'
-			  }
-			}
-		})
+
+
 
 
 				

@@ -77,6 +77,8 @@ form input.ng-invalid.ng-touched {
 }
 
 /* FIN UI GRID */
+
+/* MODAL POPUP */
 .modal {
   display: block;
   z-index: -1;
@@ -85,3 +87,39 @@ form input.ng-invalid.ng-touched {
 .modal.fade.in {
   z-index: 1050;
 }
+/* FIN MODAL POPUP */
+
+/* SLIDES */
+.slides_control > div{
+  height: 250px;
+}
+.slides_control img{
+  margin:auto;
+  width: 250px;
+}
+.slides_control {
+  /*position:absolute;*/
+  width: 250px;
+  left:50%;
+  top:20px;
+ /*margin-left:-200px;*/
+}
+
+/******/
+
+.slides_control_prod > div{
+  height: 80px;
+}
+.slides_control_prod img{
+  margin:auto;
+  width: 80px;
+}
+.slides_control_prod {
+  /*position:absolute;*/
+  width: 80px;
+  left:50%;
+  top:20px;
+ /*margin-left:-200px;*/
+}
+
+/* FIN SLIDES */

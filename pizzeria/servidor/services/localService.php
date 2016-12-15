@@ -121,7 +121,7 @@ switch ($objRecibido->accion) {
 		// Para la grilla de locales
 		if ($objRecibido->filtro == "grilla") {
 		 
-			if ($objRecibido->rolUsuario == 'admin') {
+			if ($objRecibido->rolUsuario == 'admin' || $objRecibido->rolUsuario == 'cliente') {
 				$campos = '*';
 				$tablas = 'locales';
 				$condiciones = '1';
