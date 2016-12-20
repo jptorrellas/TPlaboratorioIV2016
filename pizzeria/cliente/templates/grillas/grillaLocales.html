@@ -12,7 +12,7 @@
 		                <h3 style="margin:0; color:white;"><i class="fa fa-tasks"></i>{{grillaTitulo}}</h3>
 		            </div>
 		            <div class="col-md-1">
-		                <button class="btn btn-u" title="Agregar" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
+		                <button ng-if="usuario.rol == 'admin'" class="btn btn-u" title="Agregar" data-toggle="modal" data-target="#popupfrm" ng-click="agregarItem()"><i class="fa fa-plus"></i></button>
 		            </div>
 		            <div class="col-md-1">
 		                <button class="btn btn-u" title="Actualizar Grilla" ng-click="traerTodo()"><i class="fa fa-refresh"></i></button>
